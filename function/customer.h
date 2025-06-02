@@ -4,6 +4,7 @@
 #include "storage.h"  // Assume this handles product storage/display/find
 using namespace std;
 
+
 // Cart node structure (doubly linked list)
 struct CartNode {
     string productName;
@@ -83,9 +84,9 @@ void sortProductsMenu() {
         cout << "1. Alphabet\n2. Category\n3. Price\n4. Back\nEnter choice: ";
         cin >> choice;
         switch (choice) {
-            case 1: system("cls"); sort_alpha(); break;
-            case 2: system("cls"); sort_category(); break;
-            case 3: system("cls"); sort_price(); break;
+            case 1: system("cls"); sortStorageByName(); break;
+            case 2: system("cls"); sortStorageByCategory(); break;
+            case 3: system("cls"); sortStorageByPrice(); break;
             case 4: system("cls"); return;
             default: cout << "Invalid choice, try again.\n"; break;
         }
@@ -99,14 +100,14 @@ void customerMenu() {
         cout << "\nCustomer Menu:\n";
         cout << "1. Sort products\n2. Find a product\n3. Shop products\n4. Back\nEnter choice: ";
         cin >> choice;
+        cin.ignore(); // Always clear input buffer after cin >>
         switch (choice) {
             case 1: sortProductsMenu(); break;
             case 2: {
                 string productName;
                 cout << "Enter product name to find: ";
-                cin.ignore();
                 getline(cin, productName);
-                find_product(productName);
+                findProduct(productName); // Use improved storage function name
                 break;
             }
             case 3: {
@@ -114,13 +115,17 @@ void customerMenu() {
                 string productName;
                 int quantity;
                 while (true) {
-                    display();
+                    displayStorage(); // Use improved storage function name
                     cout << "Enter product name to add to cart (type 'stop' to finish): ";
-                    cin.ignore();
                     getline(cin, productName);
                     if (productName == "stop") break;
+                    if (!productExistsByName(productName)) {
+                        cout << "Product not found. Try again.\n";
+                        continue;
+                    }
                     cout << "Enter quantity: ";
                     cin >> quantity;
+                    cin.ignore();
                     addToCart(productName, quantity);
                 }
                 checkout();
@@ -129,6 +134,7 @@ void customerMenu() {
                     cout << "Are you done buying? (y/n): ";
                     cin >> done;
                     done = tolower(done);
+                    cin.ignore();
                     if (done == 'y') {
                         clearCart();
                         return;

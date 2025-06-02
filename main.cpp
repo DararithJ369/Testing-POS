@@ -1,10 +1,8 @@
 #include<iostream>
-#include<string>
 #include"function/authentication.h"
-#include"function/customer.h"
 #include"function/admin.h"
-#include"function/storage.h"
-#include"function/cashier.h"
+// #include"function/cashier.h"
+#include"function/customer.h"
 #include"function/manager.h"
 using namespace std;
 
@@ -17,12 +15,12 @@ enum ROLE{
 
 int main(){
     while(true){
-        switch(authenticateUser()){
-            case CUSTOMER: customerMenu(); break;
-            case CASHIER: cashierMenu(); break;
-            case MANAGER: break;
-            case ADMIN: adminMenu(); break;
-        }
+        switch(login()){
+            // case CUSTOMER:customerMenu();break;
+            // case CASHIER:cashierMenu();break;
+            // case MANAGER:managerMenu();break;
+            case ADMIN:adminMenu();break;  
+        }       
     }
-    return 0;
 }
+

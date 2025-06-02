@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include "function.h"
 using namespace std;
 
 struct Product {
@@ -113,6 +114,7 @@ void addItemToCart(Stack* s, int checkID) {
     }
     inputFile.close();
 }
+
 void updateStock(Stack* s,int checkID) {
     if (s == nullptr || s->size == 0) {
         cout << "No sales data to update." << endl;
@@ -204,7 +206,6 @@ void updateStock(Stack* s,int checkID) {
     }
     cout << "Stock updated successfully in Database/storage.csv" << endl;
 }
-
 
 void removeItemFromCart(Stack* s, int ID) {
     Product* e = s->head;
@@ -431,6 +432,9 @@ void viewTransaction(Stack*s){
     file.close();
     cout << "Loaded " << s->size << " records from " << "history.txt" << endl;
 }
+
+
+
 
 void cashierMenu(){
     Stack * s = CreateEmptyStack();

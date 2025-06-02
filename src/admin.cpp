@@ -6,7 +6,6 @@
 #include <windows.h>
 #include <cctype>
 #include "color.h"
-// #include "function.h"
 #include "user.h"
 #include "product.h"
 #include "storage.h"
