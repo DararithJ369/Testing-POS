@@ -5,7 +5,6 @@
 // #include "function/storage.h"
 // #include "function/cashier.h"
 #include "function/admin.h"
-#include "function/admin.h"
 // #include "function/customer.h"
 // #include "function/manager.h"
 using namespace std;

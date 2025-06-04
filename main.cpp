@@ -1,9 +1,10 @@
 #include<iostream>
-#include"function/authentication.h"
-#include"function/admin.h"
-// #include"function/cashier.h"
-#include"function/customer.h"
-#include"function/manager.h"
+#include"include/auth/authentication.h"
+#include"include/admin.h"
+#include"include/cashier.h"
+#include"include/customer.h"
+#include"include/manager.h"
+#include"include/color.h"
 using namespace std;
 
 enum ROLE{
@@ -19,7 +20,7 @@ int main(){
             // case CUSTOMER:customerMenu();break;
             // case CASHIER:cashierMenu();break;
             // case MANAGER:managerMenu();break;
-            case ADMIN:adminMenu();break;  
+            case ADMIN:funcAdminMenu();break;  
         }       
     }
 }

@@ -9,7 +9,6 @@
 // #include "function.h"
 #include "user.h"
 #include "product.h"
-#include "storage.h"
 using namespace std;
 
 void funcUserManagementMenu(funcListUser* userList) {
@@ -105,6 +104,7 @@ void funcProductManagementMenu(funcListProduct* productList) {
                 sortProducts(productList);
                 cout << GREEN << "Products sorted successfully!" << RESET << endl;
             }
+            case 7: return;
             default:
                 cout << RED << "Invalid option! Please try again." << RESET << endl;
         }
