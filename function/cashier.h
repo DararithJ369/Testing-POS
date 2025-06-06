@@ -3,7 +3,6 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "function.h"
 using namespace std;
 
 struct Product {
@@ -200,7 +199,7 @@ void updateStock(Stack* s,int checkID) {
         cout << "Error deleting original file!" << endl;
         return;
     }
-    if (rename("temp.txt", "Database/storage.csv") != 0) {
+    if (rename("temp.txt", "Database/products.csv") != 0) {
         cout << "Error renaming temp file!" << endl;
         return;
     }

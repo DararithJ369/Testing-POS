@@ -5,6 +5,7 @@
 #include <cctype>
 #include <sstream>
 #include "color.h"
+#include "utils.h"
 using namespace std;
 
 struct signupNode{
@@ -69,16 +70,6 @@ void readAllUsersFromCSV(signupStack* s, string filename) {
     }
 }
 
-bool isAllAlphabets(string str) {
-    for (char ch : str) {if (!(isalpha(ch) || isspace(ch))) return false;}
-    return true;    
-}
-
-bool isAllDigits(string str) {
-    for (char ch : str) {if (!isdigit(ch)) return false;}
-    return true;
-}
-
 void writeUserToCSV(string name, int age, char gender, string phone, string role, string email, string password){
     system("cls");
     cout << GREEN << "Sign Up successfully" << RESET << endl;
@@ -138,9 +129,10 @@ void verifyInfoFromUser(string email, string password) {
     do {
         system("cls");
         cout << VIOLET << "Verify your information" << RESET << endl;
-        if (!check) cout << RED << "Invalid name! Name shouldn't have symbol or number!" << endl;
+        if (!check) cout << RED << "Invalid name! Name shouldn't have symbol or number!" << RESET<< endl;
         cout << "Full-name: "; getline(cin >> ws, input.name);
         check = isAllAlphabets(input.name);
+        input.name = Capitalization(input.name);
     } while (!check);
 
     // check Age
@@ -157,7 +149,7 @@ void verifyInfoFromUser(string email, string password) {
     do {
         system("cls");
         cout << VIOLET << "Verify your information" << RESET << endl;
-        if (!check) cout << RED << "Invalid gender! Please enter (M/F)!" << endl;
+        if (!check) cout << RED << "Invalid gender! Please enter (M/F)!" << RESET<< endl;
         cout << "Full-name: " << input.name << endl;
         cout << "Age: " << input.age << endl;
         cout << "gender (M/F): "; cin >> input.gender;
@@ -169,13 +161,19 @@ void verifyInfoFromUser(string email, string password) {
     do {
         system("cls");
         cout << VIOLET << "Verify your information" << RESET << endl;
-        if (!check) cout << RED << "Invalid phone number!" << endl;
+        if (!check) cout << RED << "Invalid phone number!"<< RESET << endl;
         cout << "Full-name: " << input.name << endl;
         cout << "Age: " << input.age << endl;
-        cout << "gender(M/F): " << input.gender << endl;
+        cout << "gender (M/F): " << input.gender << endl;
         cout << "Phone-number: "; cin >> input.phone;
         check = (isAllDigits(input.phone) && input.phone[0] == '0' && (input.phone.size() == 9 || input.phone.size() == 10));
     } while (!check);
+
+    ofstream user_email;
+    user_email.open("Database/temporary_user.txt", ios::out);
+    user_email << email;
+    user_email.close();
+
     writeUserToCSV(input.name, input.age, input.gender, input.phone, "customer", email, password);
 }
 
@@ -194,6 +192,7 @@ bool isEmailExists(signupStack *s, string email){
     return check;
     
 }
+
 
 int verifyEmailAndPassFromUser(){
     system("cls");
@@ -234,4 +233,5 @@ int verifyEmailAndPassFromUser(){
             } cout << endl;
         }
     }
+    string loggedInEmail = input.email;
 }

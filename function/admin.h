@@ -112,6 +112,9 @@ void funcProductManagementMenu(funcListProduct* productList) {
 }
 
 void funcAdminMenu() {
+    string user_email = catchEmailFromTemporaryEmail();
+    cout << user_email;
+    system("pause");
     funcListUser* userList = createfuncListUser();
     funcListProduct* productList = createfuncListProduct();
     while (true) {

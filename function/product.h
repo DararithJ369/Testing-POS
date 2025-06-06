@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <windows.h>
+#include <ctime>
 using namespace std;
 
 struct funcProductNode{
@@ -29,17 +30,6 @@ funcListProduct* createfuncListProduct() {
     list->head = NULL;
     list->tail = NULL;
     return list;
-}
-
-string prodCapitalization(string index){
-    string cap;
-    bool isFirst = true;
-    for(char c : index){
-        if(isFirst){cap += toupper(c); isFirst = false;}
-        else if(c == ' '){cap += c; isFirst = true;}
-        else cap += c;
-    }
-    return cap;
 }
 
 void addProductBegin(funcListProduct* list, string id, string name, string category, string brand, double price, string unit, int stock, double discount) {
@@ -235,14 +225,14 @@ void addNewProduct(funcListProduct* list) {
     cout << "Please enter the following product information to at new product\n";
     cout << string(90, '-') << endl;
     cout << "Product Name:      "; getline(cin >> ws, Product.name);
-    Product.name = prodCapitalization(Product.name);
+    Product.name = Capitalization(Product.name);
     Product.id = to_string(list->size + 1); // Assign ID based on current size
     system("cls");
     while(true){
         cout << YELLOW << "Attention: " << RESET << "Please enter the right category." << endl;
         cout << YELLOW << "Available categories: " << RESET << "{Fruit, Meat, Electronics, Canned, Bakery, Vegetable, Dairy, Snacks, Household, Beverage, Dessert, Personal Care, Stationery, Baking, Breakfast, Condiment, Grains, Nutrition, Meat Alternative}" << endl;
         cout << "Product Category:  "; getline(cin >> ws, Product.category);
-        Product.category = prodCapitalization(Product.category);
+        Product.category = Capitalization(Product.category);
         system("cls");
         if(isValidCategory(Product.category)) break;
         else cout << RED << "Invalid category! Please enter a valid category." << RESET << endl;
@@ -257,7 +247,7 @@ void addNewProduct(funcListProduct* list) {
     cout << "Product Category:  " << Product.category << endl;
     cout << "Product Brand:     "; getline(cin >> ws, Product.brand);
     system("cls");
-    Product.brand = prodCapitalization(Product.brand);
+    Product.brand = Capitalization(Product.brand);
     cout << VIOLET << "Add New Product" << RESET << endl;
     cout << string(90, '-') << endl;
     cout << "Please enter the following product information to at new product\n";
@@ -320,7 +310,7 @@ void displayProductsByCategory(funcListProduct* list, bool check) {
     cout << "Enter the category to display products: ";
     cin.ignore();
     getline(cin, category);
-    category = prodCapitalization(category);
+    category = Capitalization(category);
     int count = 0;
     system("cls");
     funcProductNode* current = list->head;
@@ -368,7 +358,7 @@ void displayProductsByBrand(funcListProduct* list, bool check) {
     cout << "Enter the brand to display products: ";
     cin.ignore();
     getline(cin, brand);
-    brand = prodCapitalization(brand);
+    brand = Capitalization(brand);
     int count = 0;
     system("cls");
     funcProductNode* current = list->head;
@@ -438,7 +428,7 @@ void modifyProductName(funcListProduct* list, funcProductNode* current){
     cout << "Current name: " << current->name << endl;
     cout << "Enter new name: ";
     getline(cin >> ws, newName);
-    newName = prodCapitalization(newName);
+    newName = Capitalization(newName);
     current->name = newName;
     system("cls");
     cout << GREEN << "Product's name updated successfully!" << RESET << endl;
@@ -452,7 +442,7 @@ void modifyProductCategory(funcListProduct* list, funcProductNode* current){
     cout << "Current category: " << current->category << endl;
     cout << "Enter new category: ";
     getline(cin >> ws, newCategory);
-    newCategory = prodCapitalization(newCategory);
+    newCategory = Capitalization(newCategory);
     current->category = newCategory;
     system("cls");
     cout << GREEN << "Product's category updated successfully!" << RESET << endl;
@@ -466,7 +456,7 @@ void modifyProductBrand(funcListProduct* list, funcProductNode* current){
     cout << "Current brand: " << current->brand << endl;
     cout << "Enter new brand: ";
     getline(cin >> ws, newBrand);
-    newBrand = prodCapitalization(newBrand);
+    newBrand = Capitalization(newBrand);
     current->brand = newBrand;
     system("cls");
     cout << GREEN << "Product's brand updated successfully!" << RESET << endl;
@@ -542,10 +532,10 @@ void modifyProduct(funcListProduct* list) {
     funcProductNode* current = list->head;
     bool found = false;
     while(current != NULL){
-        if(current->id == enterID) found = true; break;
+        if(current->id == enterID) {found = true; break;}
         current = current->next;
     }
-    if(!found) cout << RED << "Product with ID " << enterID << " nnot found!" << RESET << endl;
+    if(!found) cout << RED << "Product with ID " << enterID << " not found!" << RESET << endl;
     else{
         cout << GREEN << current->name << "'s information" << RESET << endl;
         cout << "ID: " << current->id << endl;
@@ -604,8 +594,8 @@ void modifyProduct(funcListProduct* list) {
         deleteProductAt(list, pos);
         addProductAt(list, pos, id, name, category, brand, price, unit, stock, discount);
         saveAllProductsToCSV(list, "Database/products.csv");
+        cout << GREEN << "Product information modified successfully!" << RESET << endl << endl;
     }
-    cout << GREEN << "Product information modified successfully!" << RESET << endl << endl;
     system("pause");
     system("cls");
 }
@@ -614,7 +604,7 @@ void searchByProductName(funcListProduct* list, bool clearScreen) {
     string name;
     bool check = false;
     cout << "Enter the product name to search: "; getline(cin >> ws, name);
-    name = prodCapitalization(name);
+    name = Capitalization(name);
     system("cls");
     funcProductNode* current = list->head;
     while(current != NULL){
@@ -763,4 +753,203 @@ void sortProducts(funcListProduct* list) {
         }
     }
     
+}
+
+// for add to cart
+funcProductNode* findProductByID(funcListProduct* productList, string id){
+    funcProductNode* node = productList->head;
+    while(node){
+        if(node->id == id) return node;
+        node = node->next;
+    }
+    return NULL;
+}
+
+void addItemToCart(funcListProduct* cartList, funcListProduct* productList, string id, int qty){
+    funcProductNode* cart = cartList->head;
+    while(cart != NULL){
+        if(cart->id == id){
+            int current_qty = cart->productSale;
+            cart->productSale += qty;
+            cout << GREEN << "Updated quantity for " << cart->name << " (ID: " << id << ") from " << current_qty << " to " << qty << RESET << endl;
+            return;
+        }
+        cart = cart->next;
+    }
+
+    funcProductNode* product = findProductByID(productList, id);
+    if(!product){
+        cout << RED << "Product not found in inventory!" << RESET << endl;
+        return;
+    }
+    // create new cart node and copy all fields
+    funcProductNode* newCartNode = new funcProductNode;
+    *newCartNode = *product;    // copy all fields
+    newCartNode->productSale = qty;
+    newCartNode->prev = NULL;
+    newCartNode->next = cartList->head;
+    if(cartList->head != NULL) cartList->head->prev = newCartNode;
+    else cartList->tail = newCartNode;
+    cartList->head = newCartNode;
+    cartList->size++;
+    product->stock -= qty;
+    cout << GREEN << "Add " << qty << " of " << RED << product->name << GREEN << " (ID: " << id << ") to cart successfully." << RESET << endl;
+}
+
+void removeItemFromCart(funcListProduct* list, funcListProduct* productList, string id){
+    funcProductNode* cart = list -> head;
+    while (cart != NULL){
+        if(cart -> id == id){
+            if(cart -> prev != NULL) cart -> prev -> next = cart -> next;
+            else list -> head = cart -> next;
+            if(cart -> next !=NULL) cart -> next -> prev = cart -> prev;
+            else list -> tail = cart -> prev;
+            delete cart;
+            list -> size--;
+            funcProductNode* product = findProductByID(productList, id);
+            if(product) product->stock += cart->productSale;
+            system("cls");
+            cout << GREEN << "Remove item " << RED << cart->name << GREEN <<" (ID: " << id << ") from cart successfully." << RESET << endl;
+            return;
+        }
+        cart = cart -> next;
+    }
+    cout << "Product Not found" << endl;
+}
+
+void calculateReceipt(funcListProduct* list) {
+    int count = 0;
+    funcProductNode* cart = list->head;
+    float total = 0.0;
+    while(cart != NULL) {
+        total += cart->price * cart->productSale;
+        cart = cart->next;
+        count++;
+    }
+    cout << GRAY << string(40, '-') << RESET << endl;
+    cout << "Total item(s) in cart  : " << count << endl;
+    cout << "Total cost             : $ " << fixed << setprecision(2) << total << endl;
+    cout << GRAY << string(40, '-') << RESET << endl;
+}       
+
+void updateQuantityInCart(funcListProduct* list, string id, int update_qty){
+    funcProductNode* cart = list->head;
+    int current_qty;
+    while(cart != NULL){
+        if(cart->id == id){
+            current_qty = cart->productSale;
+            cart->productSale = update_qty;
+            cout << GREEN << "Updated quantity for " << cart->name << " (ID: " << id << ") from " << current_qty << " to " << update_qty << RESET << endl;
+            return;
+        }
+        cart = cart->next;
+    }
+    cout << RED << "Product not found!!!" << RESET << endl;
+}
+
+void saveTotalMoneyToFile(double total, const string& filename) {
+    ofstream file(filename, ios::app); // append mode
+    if (!file.is_open()) {
+        cout << RED << "Error opening total money file!" << RESET << endl;
+        return;
+    }
+    file << fixed << setprecision(2) << total << endl;
+    file.close();
+}
+
+void saveTransactionToCSV(funcListProduct* cart, double total, string filename){
+    ofstream file;
+    file.open(filename, ios::app);
+    if(!file.is_open()){cout << RED << "Error opening transaction file!" << RESET << endl; return;}
+    // get current date and time
+    time_t now = time(0);
+    tm* ltm = localtime(&now);
+    char datetime[32];
+    strftime(datetime, sizeof(datetime), "%Y-%m-%d %H:%M:%S", ltm);
+    // write transaction summary (date, total)
+    file << "\"" << datetime  << "\"," << total << ",";
+    // optionall, write all items in the transaction
+    funcProductNode* node = cart->head;
+    while(node){
+        file << node->id << ":" << node->name << ":" << node->productSale;
+        node = node->next;
+        if(node) file << "|";
+    }
+    file << endl;
+    file.close();
+}
+
+void printReceipt(funcListProduct* list, bool check) {
+    cout << string(50, '=');
+    cout << BOLD << CYAN << " CART ITEMS " << RESET;
+    cout << string(50, '=') << endl;
+    cout << string(112, '=') << endl;
+    cout << left 
+         << setw(10) << "ID" 
+         << setw(20) << "Name" 
+         << setw(15) << "Category" 
+         << setw(15) << "Brand" 
+         << setw(10) << "Price" 
+         << setw(10) << "Unit" 
+         << setw(10) << "Qty" 
+         << setw(10) << "Discount" 
+         << setw(21) << "Total"
+         << endl;
+
+    time_t now = time(0);
+    tm* ltm = localtime(&now);
+    char datetime[32];
+    strftime(datetime, sizeof(datetime), "%Y-%m-%d %H:%M:%S", ltm);
+    
+    int count = 1;
+    funcProductNode* cart = list->head;
+    float total = 0.0;
+    while (cart != nullptr) {
+        cout << left 
+             << setw(10) << cart->id 
+             << setw(20) << cart->name 
+             << setw(15) << cart->category 
+             << setw(15) << cart->brand 
+             << setw(10) << cart->price
+             << setw(10) << cart->unit
+             << setw(10) << cart->productSale 
+             << setw(10) << cart->discount
+             << setw(21) << cart->price * cart->productSale
+             << endl;
+        total += cart->price * cart->productSale;
+        cart = cart->next;
+    }
+    cout << GRAY << string(112, '=') << endl;
+    cout << "Total items in cart    : " << list->size << endl;
+    cout << "Total cost             : $ " << total << endl;
+    cout << string(112, '=') << RESET << endl;
+    if (list->size == 0) {cout << RED << "Cart is empty." << RESET << endl;}
+    if(!check){cout << datetime << endl;}
+}
+
+void checkout(funcListProduct* list){
+    if(list->size == 0){cout << RED << "Cart is empty! " << RESET << "nothing to checkout..." << endl; return;}
+    printReceipt(list, 0);
+
+    // calculate total
+    double total = 0.0;
+    funcProductNode* cart = list->head;
+    while(cart != NULL){
+        total += cart->price * cart->productSale;
+        cart = cart->next;
+    }
+    saveTransactionToCSV(list, total, "Database/transactions.csv");
+    saveTotalMoneyToFile(total, "Database/total_money.txt"); 
+    funcProductNode* current = list->head;
+    while(current != NULL){
+        funcProductNode* temp = current;
+        current = current->next;
+        delete temp;
+    }
+    list->head = list->tail = NULL;
+    list->size = 0;
+    cout << GREEN << "Thanks for your purchase!" << RESET << endl;
+    cout << "Have a nice day." << endl;
+    system("pause");
+    system("cls");
 }

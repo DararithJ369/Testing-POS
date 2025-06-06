@@ -1,153 +1,168 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "storage.h"  // Assume this handles product storage/display/find
+#include "color.h"
+#include "product.h"
+#include "user.h"
+// #include "storage.h"  // Assume this handles product storage/display/find
 using namespace std;
 
+void selectAllProducts(funcListProduct* list, funcListProduct* cartList){
 
-// Cart node structure (doubly linked list)
-struct CartNode {
-    string productName;
-    int quantity;
-    CartNode* next;
-    CartNode* prev;
-};
-
-CartNode* cartHead = nullptr;  // head of cart list
-
-// Add product to cart (push to head)
-void addToCart(const string& product, int qty) {
-    CartNode* newNode = new CartNode{product, qty, nullptr, nullptr};
-    if (cartHead == nullptr) {
-        cartHead = newNode;
-    } else {
-        newNode->next = cartHead;
-        cartHead->prev = newNode;
-        cartHead = newNode;
-    }
-    cout << qty << " " << product << "(s) added to your cart.\n";
-}
-
-// Remove last added product from cart (pop from head)
-void removeFromCart() {
-    if (cartHead == nullptr) {
-        cout << "Cart is empty, nothing to remove.\n";
-        return;
-    }
-    CartNode* temp = cartHead;
-    cout << "Removed " << temp->quantity << " " << temp->productName << "(s) from cart.\n";
-    cartHead = cartHead->next;
-    if (cartHead != nullptr) {
-        cartHead->prev = nullptr;
-    }
-    delete temp;
-}
-
-// Display all products in the cart
-void displayCart() {
-    if (cartHead == nullptr) {
-        cout << "Your cart is empty.\n";
-        return;
-    }
-    cout << "Products in your cart:\n";
-    CartNode* current = cartHead;
-    int count = 1;
-    while (current != nullptr) {
-        cout << count << ". " << current->productName << " - Quantity: " << current->quantity << "\n";
-        current = current->next;
-        count++;
-    }
-}
-
-// Clear entire cart (free all nodes)
-void clearCart() {
-    while (cartHead != nullptr) {
-        removeFromCart();
-    }
-    cout << "Cart has been cleared.\n";
-}
-
-// Checkout simulation
-void checkout() {
-    cout << "\nCheckout summary:\n";
-    displayCart();
-    cout << "Thank you for your purchase!\n";
-    clearCart();
-}
-
-// Sort menu (calls assumed functions from storage.h)
-void sortProductsMenu() {
-    system("cls");
-    int choice;
-    while (true) {
-        cout << "\nSort products by:\n";
-        cout << "1. Alphabet\n2. Category\n3. Price\n4. Back\nEnter choice: ";
-        cin >> choice;
-        switch (choice) {
-            case 1: system("cls"); sortStorageByName(); break;
-            case 2: system("cls"); sortStorageByCategory(); break;
-            case 3: system("cls"); sortStorageByPrice(); break;
-            case 4: system("cls"); return;
-            default: cout << "Invalid choice, try again.\n"; break;
-        }
-    }
-}
-
-// Customer menu
-void customerMenu() {
-    while (true) {
+    while(true){
         int choice;
-        cout << "\nCustomer Menu:\n";
-        cout << "1. Sort products\n2. Find a product\n3. Shop products\n4. Back\nEnter choice: ";
-        cin >> choice;
-        cin.ignore(); // Always clear input buffer after cin >>
-        switch (choice) {
-            case 1: sortProductsMenu(); break;
+        displayAllProducts(list, 0);
+
+        cout << CYAN << "\n\n==> Product Selection" << RESET << endl;
+        cout << "1. Add item to cart\n2. Remove item from cart\n3. View receipt\n4. Cancel\n5. Check out" << endl;
+        calculateReceipt(cartList);
+        cout << "Enter your option: "; cin >> choice;
+        switch(choice){
+            case 1: {
+                system("cls");
+                string id;
+                int qty;    
+                funcProductNode* product = NULL;
+                do {
+                    cout << "Enter ID of product    : "; getline(cin >> ws, id);
+                    product = findProductByID(list, id);
+                    if(!product) {cout << RED << "Product not found! Please enter valid ID." << RESET << endl;}
+                } while(!product);
+                cout << GREEN << "Product selected       : " << product->name << RESET << endl;
+                cout << "Enter quantity         : "; cin >> qty;
+                if(qty > product->stock){
+                    cout << RED << "Not enough stock! Only " << GREEN << product->stock << RED << " available." << RESET << endl;
+                    system("pause");
+                    break;
+                }
+                addItemToCart(cartList, list, id, qty);
+                system("pause");
+                break;
+            }
             case 2: {
-                string productName;
-                cout << "Enter product name to find: ";
-                getline(cin, productName);
-                findProduct(productName); // Use improved storage function name
+                system("cls");
+                string id;
+                int choice;
+                int qty;
+                while(true){
+                    printReceipt(cartList, 1); 
+                    cout << "Enter ID of product to remove/update quantity: "; getline(cin >> ws, id);
+                    funcProductNode* cartProduct = findProductByID(cartList, id);
+                    if(cartProduct){
+                        cout << "1. Remove item in cart by ID\n2. Update quantity\n3. Back" << endl;
+                        cout << "Enter your choice: "; cin >> choice;
+                        switch(choice){
+                            case 1: {
+                                removeItemFromCart(cartList, list, id);
+                                system("pause");
+                                break;
+                            }
+                            case 2: {
+                                cout << "Enter quantity to update: "; cin >> qty;
+                                funcProductNode* cartProduct = findProductByID(cartList, id);
+                                funcProductNode* product = findProductByID(list, id);
+                                if (!cartProduct || !product) {
+                                    cout << RED << "Product not found!" << RESET << endl;
+                                    break;
+                                }
+                                int availableStock = product->stock + cartProduct->productSale; // what’s in stock + what’s already in cart
+                                if (qty > availableStock) {
+                                    cout << RED << "Not enough stock! Only " << GREEN << availableStock << RED << " available." << RESET << endl;
+                                } else {
+                                    // Update stock: return old cart qty to stock, then subtract new qty
+                                    product->stock = availableStock - qty;
+                                    cartProduct->productSale = qty;
+                                    cout << GREEN << "Updated quantity for " << cartProduct->name << " (ID: " << id << ") to " << qty << RESET << endl;
+                                }
+                                system("pause");
+                                break;
+                            }
+                            case 3: {return;}
+                            default: { cout << RED << "Invalid input!!!" << RESET << endl; break;}
+                        }
+                        break;
+                    }
+                    else {cout << RED << "Product not found in cart!" << RESET << endl;}
+                }
+
                 break;
             }
             case 3: {
                 system("cls");
-                string productName;
-                int quantity;
-                while (true) {
-                    displayStorage(); // Use improved storage function name
-                    cout << "Enter product name to add to cart (type 'stop' to finish): ";
-                    getline(cin, productName);
-                    if (productName == "stop") break;
-                    if (!productExistsByName(productName)) {
-                        cout << "Product not found. Try again.\n";
-                        continue;
-                    }
-                    cout << "Enter quantity: ";
-                    cin >> quantity;
-                    cin.ignore();
-                    addToCart(productName, quantity);
-                }
-                checkout();
-                char done;
-                while (true) {
-                    cout << "Are you done buying? (y/n): ";
-                    cin >> done;
-                    done = tolower(done);
-                    cin.ignore();
-                    if (done == 'y') {
-                        clearCart();
-                        return;
-                    } else if (done == 'n') {
-                        return; // back to customer menu
-                    } else {
-                        cout << "Invalid choice, try again.\n";
-                    }
-                }
+                printReceipt(cartList, 1);
+                system("pause");
                 break;
             }
-            case 4: return;
-            default: cout << "Invalid choice, try again.\n"; break;
+            case 4: {
+                system("cls");
+                cout << YELLOW << "Returning to previous menu..." << RESET << endl;
+                system("pause");
+                system("cls");
+                return;
+            }
+            case 5: {
+                system("cls");
+                checkout(cartList);
+                saveAllProductsToCSV(list, "Database/products.csv");
+                return;
+            }
+            default: {
+                cout << RED << "Invalid option! Please try again." << RESET << endl;
+                system("cls");
+                break;
+            }
+        }
+    }
+
+}
+
+void helpForCustomer(){
+    cout << BLUE <<"Select Product" << RESET << " : Use for process your sales(Add item to cart, Remove item from cart, View cart and Checkout)." << endl;
+    cout << BLUE << "Check Your Information" << RESET << " : Check/Edit your own information (Name, age, gender, Phone Number, Role, Email, Password)" << endl;
+    cout << BLUE << "Any help from our system" << RESET << " : Use to check the detail of any option." << endl;
+    cout << BLUE << "Exit our program" << RESET << " : Exit the whole program." << endl;
+}
+
+
+void customerMenu(){
+    int choice;
+    funcListUser* userList = createfuncListUser();
+    funcListProduct* cartList = createfuncListProduct();
+    funcListProduct* list = createfuncListProduct();
+    loadAllProductsFromCSV(list, "Database/products.csv");
+    funcLoadUsers(userList, "Database/users.csv");
+    string loggedEmail = catchEmailFromTemporaryEmail();
+    while(true){
+        cout << GREEN << "Welcome to our POS System" << RESET << endl;
+        cout << "==> Your current role: " << YELLOW << "customer" << RESET << endl << endl;
+        cout << "Customer Menu" << endl;
+        cout << "1. Select Product\n2. Check your information\n3. Any help from our system\n4. Exit our program" << endl;
+        cout << "Enter your option: ", cin >> choice;
+        switch(choice){
+            case 1: {system("cls"); selectAllProducts(list, cartList); break;}
+            case 2: {
+                // char ch;
+                system("cls"); 
+                funcModifyOwnInfo(userList, loggedEmail);
+                break;
+            }
+            case 3: {
+                system("cls");
+                helpForCustomer();
+                system("pause");
+                break;
+            }
+            case 4: {
+                cout << YELLOW << "Returning to previous menu." << RESET << endl;
+                system("pause");
+                return;
+            }
+            default: {
+                cout << RED << "Invalid Input !!! Please Try Again." << RESET << endl;
+                break;
+            }
         }
     }
 }
+
+

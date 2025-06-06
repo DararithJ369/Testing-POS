@@ -98,6 +98,12 @@ bool verifyEmailAndPassInSignIn(signinStack *s, string email, string password){
 int verifyRoleInSignIn(signinStack *s, string email, string password){
     signinNode *temporary = s -> top;
     string role;
+
+    ofstream user_email;
+    user_email.open("Database/temporary_user.txt", ios::out);
+    user_email << email;
+    user_email.close();
+
     while (temporary != NULL){
         if (temporary -> email == email && temporary -> password == password) {
             role = temporary -> role;
@@ -118,6 +124,7 @@ int verifyUserSignIn(){
     signinStack *s = createEmptySignInStack();
     getAllUsersFromCSV(s, "Database/users.csv");
     signinNode input;
+    string loggedInEmail;
     int count = 0;
     do{
         cout << VIOLET << "Sign in your account" << RESET << endl;
@@ -136,6 +143,7 @@ int verifyUserSignIn(){
         if (verifyEmailAndPassInSignIn(s, input.email, input.password)){
             system("cls");
             cout << GREEN << "Sign in success!" << RESET << endl;
+            loggedInEmail = input.email;
             return verifyRoleInSignIn(s, input.email, input.password);
         }
         else {
