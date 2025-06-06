@@ -1,13 +1,11 @@
 #include<iostream>
-#include <windows.h>
-#include "function/catch_temporary_user.h"
-#include "function/user.h"
-#include "function/product.h"
-// #include "function/storage.h"
-#include "function/customer.h"
-#include "function/admin.h"
-// #include "function/customer.h"
-// #include "function/manager.h"
+#include"include/catch_temporary_user.h"
+#include"include/authentication.h"
+#include"include/admin.h"
+#include"include/customer.h"
+#include"include/manager.h"
+#include"include/color.h"
+#include"include/utils.h"
 using namespace std;
 
 int main(){
@@ -22,7 +20,7 @@ int main(){
         cin.ignore(); // Clear input buffer after cin
         
         switch (choice) {
-            case 1: funcAdminMenu(); break;
+            case 1: adminMenu(); break;
             // case 2: managerMenu(); break;
             // case 3: cashierMenu(); break;
             case 4: {system("cls");customerMenu(); break;}
@@ -31,6 +29,8 @@ int main(){
         }
     }
 }
+
+
 
 
 

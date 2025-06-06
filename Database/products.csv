@@ -1,16 +1,16 @@
 ID,Name,Category,Brand,Price,Unit,Stock,Discount
-1,Apples,Fruit,Bravo,3.49,kg,153,0.00
-2,Bacon,Meat,Halo,6.58,pack,63,0.00
-3,Bananas,Fruit,Charlie,2.73,kg,149,0.00
-4,Batteries,Electronics,Gamma,7.94,pack,128,0.00
-5,Beans,Canned,Bravo,2.37,can,103,0.00
+1,Apples,Fruit,Bravo,3.49,kg,109,0.00
+2,Bacon,Meat,Halo,6.58,pack,62,0.00
+3,Bananas,Fruit,Charlie,2.73,kg,148,0.00
+4,Batteries,Electronics,Gamma,7.94,pack,104,0.00
+5,Beans,Canned,Bravo,2.37,can,102,0.00
 6,Beef,Meat,Charlie,11.23,kg,114,0.00
 7,Bread,Bakery,Delta,2.66,loaf,161,0.00
 8,Broccoli,Vegetable,Echo,4.55,kg,85,0.00
 9,Butter,Dairy,Gamma,4.72,block,111,0.00
 10,Cable,Electronics,Alpha,5.36,unit,154,0.00
 11,Carrots,Vegetable,Foxtrot,3.28,kg,97,0.00
-12,Cheese,Dairy,Halo,5.15,block,106,0.00
+12,Cheese,Dairy,Halo,5.15,block,101,0.00
 13,Chips,Snacks,Echo,3.85,bag,190,0.00
 14,Chocolate,Snacks,Alpha,4.27,bar,138,0.00
 15,Cleaner,Household,Juno,6.92,bottle,139,0.00
@@ -21,8 +21,8 @@ ID,Name,Category,Brand,Price,Unit,Stock,Discount
 20,Cucumber,Vegetable,Juno,3.57,kg,157,0.00
 21,Custard,Dessert,Echo,4.39,pack,147,0.00
 22,Deodorant,Personal Care,Bravo,4.68,unit,110,0.00
-23,Detergent,Household,Charlie,8.62,bottle,159,0.00
-24,Eggs,Dairy,Foxtrot,3.49,dozen,144,0.00
+23,Detergent,Household,Charlie,8.62,bottle,156,0.00
+24,Eggs,Dairy,Foxtrot,3.49,dozen,122,0.00
 25,Energy Bar,Snacks,Gamma,2.99,bar,114,0.00
 26,Eraser,Stationery,Halo,1.59,unit,199,0.00
 27,Fish,Meat,Foxtrot,10.73,kg,94,0.00
@@ -97,3 +97,5 @@ ID,Name,Category,Brand,Price,Unit,Stock,Discount
 96,Notebook,Stationery,Halo,3.92,unit,165,0.00
 97,Glue Stick,Stationery,Echo,2.17,tube,117,0.00
 98,Dazz,Beverage,Khmer Beverages,0.75,can,288,0.00
+99,Coke,Beverage,Coca Cola,0.20,can,170,0.00
+100,Orange,Fruit,Bravo,0.90,kg,132,0.00

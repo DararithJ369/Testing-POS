@@ -23,7 +23,6 @@ struct funcListUser{
     funcUserNode* tail;
 };
 
-// Creates and returns a new, empty user list.
 funcListUser* createfuncListUser() {
     funcListUser* list = new funcListUser;
     list->size = 0;
@@ -35,6 +34,7 @@ funcListUser* createfuncListUser() {
 bool isValidEmail(string email) {
     return email.size() >= 10 && email.substr(email.size() - 10) == "@gmail.com";
 }
+
 bool isEmailExists(funcListUser* list, string email) {
     funcUserNode* current = list->head;
     while (current) {
@@ -252,8 +252,9 @@ void funcSearchUserByEmail(funcListUser*list){
     }
     cout << "---------------------------------------------\n\n";
     cout << "Enter email to search: ";
-    getline(cin, email);
+    getline(cin >> ws, email);
     system("cls");
+    current = list->head;
     while(current != NULL){
         if(current->email == email){
             cout << GREEN << current->name << " | Current User Information\n" << RESET;
@@ -291,7 +292,7 @@ void funcDeleteUserByEmail(funcListUser* list) {
         return;
     }
     cout << "Enter email to delete: ";
-    getline(cin, email);
+    getline(cin >> ws, email);
 
     if (!isValidEmail(email)) {
         cout << RED << "Invalid email format! Please enter a valid email (must end with @gmail.com)." << RESET << endl << endl;
@@ -315,7 +316,6 @@ void funcDeleteUserByEmail(funcListUser* list) {
     funcSaveUsers(list, "Database/users.csv");
     system("pause");
 }
-
 
 string funcNameMod(string newName){
     while(true){
@@ -371,7 +371,7 @@ int funcAgeMod(int newAge){
 
 string funcPhoneMod(string newPhone){
     while(true){
-        cout << "Current phone number: " << endl;
+        cout << "Current phone number: " << newPhone << endl;
         cout << "Enter new phone number: ";
         getline(cin >> ws, newPhone);
         system("cls");
@@ -406,7 +406,7 @@ string funcRoleMod(string newRole){
 
 string funcEmailMod(string newEmail){
     while(true){
-        cout << "Current email: " << endl;
+        cout << "Current email: " << newEmail << endl;
         cout << "Enter new email: ";
         getline(cin >> ws, newEmail);
         system("cls");
@@ -423,7 +423,7 @@ string funcEmailMod(string newEmail){
 
 string funcPasswordMod(string newPassword){
     while(true){
-        cout << "Current password: " << endl;
+        cout << "Current password: " << newPassword << endl;
         cout << "Enter new password: ";
         getline(cin >> ws, newPassword);
         system("cls");
@@ -450,6 +450,8 @@ void funcUpdateUserToCSV(funcListUser* list){
     funcDisplayUsers(list, 0);
 
     cout << "Select the user you want to update (1-" << list->size << "): ";
+    cin >> select;
+    cin.ignore();
 
     if(select <= 0 || select > list->size) {
         cout << RED << "Invalid selection! Please try again.\n" << RESET << endl;
@@ -619,4 +621,83 @@ void addNewUsers(funcListUser* list) {
     }
 }
 
+void funcModifyOwnInfo(funcListUser* list, string loggedEmail){
+    funcUserNode* current = list->head;
+    int option = 0;
+    int select;
+    system("cls");
+    while(current != NULL){
+        if(current->email == loggedEmail){
+            cout << GREEN << current->name << " | Current User Information\n" << RESET;
+            cout << string(50, '-') << endl;
+            cout << "Current Information:\n";
+            cout << "Name: " << current->name << endl;
+            cout << "Gender: " << current->gender << endl;
+            cout << "Age: " << current->age << endl;
+            cout << "Phone: " << current->phone << endl;
+            cout << "Role: " << current->role << endl;
+            cout << "Email: " << current->email << endl;
+            cout << string(50, '-') << endl << endl;
+            // found = true;
+            break;
+        }
+        current = current->next;
+    }
 
+    do {
+        cout << VIOLET << "Update User Information Menu:\n" << RESET;
+        cout << "1. Update Name\n";
+        cout << "2. Update Gender\n";
+        cout << "3. Update Age\n";
+        cout << "4. Update Phone\n";
+        cout << "5. Update Email\n";
+        cout << "6. Update Password\n";
+        cout << "7. Back to Main Menu\n";
+        cout << "Select an option: ";
+        cin >> option;
+
+        switch(option) {
+            case 1: system("cls"); current->name = funcNameMod(current->name); break;
+            case 2: system("cls"); current->gender = funcGenderMod(current->gender); break;
+            case 3: system("cls"); current->age = funcAgeMod(current->age); break;
+            case 4: system("cls"); current->phone = funcPhoneMod(current->phone); break;
+            case 5: system("cls"); current->email = funcEmailMod(current->email); break;
+            case 6: system("cls"); current->password = funcPasswordMod(current->password); break;
+            case 7: system("cls"); return; // exit update menu
+            default: cout << RED << "Invalid option! Please try again.\n" << RESET; break;
+        }
+
+        funcUpdateUserToList(list, select, current->name, current->age, current->gender, current->phone, current->role, current->email, current->password);
+
+        char choice = 'P';
+        while(choice != 'Y' && choice != 'N') {
+            cout << "Do you want modify something else? (Y/N): ";
+            cin >> choice;
+            choice = toupper(choice);
+            switch(choice){
+                case 'Y': system("cls"); cout << GREEN << "The information has been changed successfully\n" << RESET << endl; break;
+                case 'N': system("cls"); funcSaveUsers(list, "Database/users.csv"); return;
+                default: cout << RED << "Invalid choice! Please enter Y or N.\n" << RESET << endl;
+            }
+        }
+
+    } while(option != 7);    
+}
+
+void displayOwnInfo(funcListUser* userList, string email) {
+    funcUserNode* current = userList->head;
+    while (current) {
+        if (current->email == email) {
+            cout << GREEN << "Your Information:\n" << RESET;
+            cout << "Name: " << current->name << endl;
+            cout << "Gender: " << current->gender << endl;
+            cout << "Age: " << current->age << endl;
+            cout << "Phone: " << current->phone << endl;
+            cout << "Role: " << current->role << endl;
+            cout << "Email: " << current->email << endl;
+            return;
+        }
+        current = current->next;
+    }
+    cout << RED << "No user found with email: " << email << RESET << endl;
+}

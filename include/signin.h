@@ -1,8 +1,9 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <conio.h>
-#include "color.h"
+// #include "color.h"
 using namespace std;
 
 struct signinNode{ 
@@ -39,7 +40,7 @@ void pushInSignIn(signinStack* s, string email, string password, string role, st
 string getPassInSignIn(){    
     string password;
     char ch ;
-    cout << "Enter password: " ;
+    cout << "Enter password     : " ;
     while((ch = _getch())!= '\r'){
         if(ch == '\b'){
             if(!password.empty()){
@@ -98,6 +99,12 @@ bool verifyEmailAndPassInSignIn(signinStack *s, string email, string password){
 int verifyRoleInSignIn(signinStack *s, string email, string password){
     signinNode *temporary = s -> top;
     string role;
+
+    ofstream user_email;
+    user_email.open("Database/temporary_user.txt", ios::out);
+    user_email << email;
+    user_email.close();
+
     while (temporary != NULL){
         if (temporary -> email == email && temporary -> password == password) {
             role = temporary -> role;
@@ -119,10 +126,10 @@ int verifyUserSignIn(){
     getAllUsersFromCSV(s, "Database/users.csv");
     signinNode input;
     int count = 0;
+    cout << BOLD << YELLOW << "Sign in your account" << RESET << endl;
     do{
-        cout << VIOLET << "Sign in your account" << RESET << endl;
         while (true){
-            cout << "Enter email: " << YELLOW; cin >> input.email; cout << RESET;
+            cout << "Enter email        : "; cin >> input.email;
             if (verifyEmailInSignIn(s, input.email)) break;
             else {
                 system("cls");
@@ -131,16 +138,17 @@ int verifyUserSignIn(){
         }
         system("cls");
         cout << GREEN << "Email accepted!" << RESET << endl;
-        cout << "Enter email: " << YELLOW << input.email << RESET << endl;
+        cout << "Enter email        : " << input.email << endl;
         input.password = getPassInSignIn();
         if (verifyEmailAndPassInSignIn(s, input.email, input.password)){
-            system("cls");
-            cout << GREEN << "Sign in success!" << RESET << endl;
+            cout << endl;
+            cout << GREEN << "You are sign in successfully!" << RESET << endl;
+            system("pause");
             return verifyRoleInSignIn(s, input.email, input.password);
         }
         else {
             system("cls");
-            cout << RED << "Email and password incorrect!" << RESET << endl;
+            cout << RED << "Password incorrect! Please try again." << RESET << endl;
             continue;
         }
     } while (true);

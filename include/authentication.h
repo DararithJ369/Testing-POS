@@ -21,12 +21,13 @@ int Introduction(){
     cout << "|_|    \\___/|____/  |____/ \\__, |___/\\__\\___|_| |_| |_|" << endl;
     cout << "                           |___/                       " << endl;
     cout << endl;
+    cout << GRAY; system ("pause"); cout << RESET << endl;
     cout << "Create or signin an account to continue our system " << endl;  
-    cout << " 1. Create account                                 " << endl; 
-    cout << " 2. Sign in to your account                        " << endl;
-    cout << " 3. Exit the program                               " << endl;
-    cout << "===================================================" << endl;
-    cout << " Select an option to continue: " << YELLOW; cin >> option; cout << RESET;
+    cout << "   1. Create account                                 " << endl; 
+    cout << "   2. Sign in to your account                        " << endl;
+    cout << "   3. Exit the program                               " << endl;
+    cout << BOLD << string(50, '-') << RESET << endl;
+    cout << "Select an option to continue: " << YELLOW; cin >> option; cout << RESET;
     return option;
 }
 
@@ -46,12 +47,23 @@ void ExIT(int time){
 
 int login(){
     system("cls");
+    string currentEmail;
     while (true){
         switch (Introduction()){
-            case SIGNUP:return verifyEmailAndPassFromUser();break;
-            case SIGNIN: return verifyUserSignIn(); break;
-            case EXIT:ExIT(3);break;
-            default:break;
+            case SIGNUP:{
+                int result = verifyEmailAndPassFromUser();
+                currentEmail = catchEmailFromTemporaryEmail();
+                logUserAction(currentEmail, "Signed up");
+                return result;
+            }
+            case SIGNIN: {
+                int result = verifyUserSignIn();
+                currentEmail = catchEmailFromTemporaryEmail(); 
+                logUserAction(currentEmail, "Logged in");
+                return result;
+            }
+            case EXIT: ExIT(3); break;
+            default: break;
         }
     }
 }

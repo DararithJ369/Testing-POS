@@ -6,20 +6,19 @@
 #include <windows.h>
 #include <cctype>
 #include "color.h"
+// #include "function.h"
 #include "user.h"
 #include "product.h"
 using namespace std;
 
 void funcUserManagementMenu(funcListUser* userList) {
-    // Load users from CSV file into the userList
-    // userList = createfuncuserListUser();
-    funcLoadUsers(userList, "Database/users.csv"); // ?
-    // funcDisplayUsers(userList);
-    cout << GREEN << "Welcome to User Management Menu!" << RESET << endl;
+    funcLoadUsers(userList, "Database/users.csv"); 
     while (true) {
         system("cls");
-        cout << "User Management Menu:\n";
-        cout << "1. Add user\n2. Delete user based on email\n3. Update information\n4. Search based on email\n5. Display users\n6. Back\n";
+        cout << BOLD << GRAY << string(50, '-') << RESET << endl;
+        cout << BOLD << YELLOW << "User Management" << RESET << endl;
+        cout << "   1. Add user\n   2. Delete user based on email\n   3. Update information\n   4. Search based on email\n   5. Display users\n   6. Back\n";
+        cout << BOLD << GRAY << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
         int choice;
         cin >> choice;
@@ -59,72 +58,78 @@ void funcUserManagementMenu(funcListUser* userList) {
     }
 }
 
-void funcProductManagementMenu(funcListProduct* productList) {
-    // Load products from CSV file into the productList
-    // productList = createfuncListProduct();
-    cout << "Loading products from CSV file..." << endl;
-    loadAllProductsFromCSV(productList, "Database/products.csv"); // ?
-    cout << "Products loaded successfully!" << endl;
-    cout << GREEN << "Welcome to Product Management Menu!" << RESET << endl;
-    while (true) {
-        system("cls");
-        cout << "Product Management Menu:\n";
-        cout << "1. Add product\n2. Delete product by ID\n3. Update product information\n4. Search product\n5. Display products\n6. Sort product\n7. Back\n";
+void productInventory(funcListProduct* productList){ 
+    while(true){
+        displayAllProducts(productList, false);
+        cout << BOLD << string(50, '-') << RESET << endl;
+        cout << BOLD << YELLOW << "Inventory management" << RESET << endl;
+        cout << "   1. Add new product\n   2. Modify product\n   3. Short product\n   4. Search product\n   5. Delete product\n   6. Back\n";
+        cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
         int choice;
         cin >> choice;
-        cin.ignore(); // Clear input buffer
-
-        switch (choice) {
-            case 1: {
+        cin.ignore(); // Clear input 
+        switch(choice){
+            case 1:{
+                system("cls");
                 addNewProduct(productList);
-                // cout << GREEN << "New product has been added successfully!" << RESET << endl;
                 break;
             }
-            case 2: {
-                deleteProductByID(productList);
-                // cout << GREEN << "Product deleted successfully!" << RESET << endl;
-                break;
-            }
-            case 3: {
+            case 2:{
+                system("cls");
                 modifyProduct(productList);
-                // cout << GREEN << "Product updated successfully!" << RESET << endl;
                 break;
             }
-            case 4: {
-                searchProduct(productList);
-                break;
-            }
-            case 5: {
-                displayAllProducts(productList, 1);
-                break;
-            }
-            case 6: {
+            case 3:{
+                system("cls");
                 sortProducts(productList);
-                cout << GREEN << "Products sorted successfully!" << RESET << endl;
+                break;
             }
-            default:
-                cout << RED << "Invalid option! Please try again." << RESET << endl;
+            case 4:{
+                system("cls");
+                searchProduct(productList);
+                cout << GREEN << "Product sorted successfully!" << RESET << endl;
+                break;
+            }
+            case 5:{
+                system("cls");
+                deleteProductByID(productList);
+                break;
+            }
+            case 6:{
+                cout << YELLOW << "\n\nReturning to the previous menu..." << RESET << endl;
+                return;
+            }
+            default:{
+                system("cls");
+                cout << RED << "Invalid input! Please try again." << RESET << endl;
+                break;
+            }
         }
     }
+    
 }
 
-void funcAdminMenu() {
+void adminMenu() {
+    string user_email = catchEmailFromTemporaryEmail();
     funcListUser* userList = createfuncListUser();
     funcListProduct* productList = createfuncListProduct();
+    loadAllProductsFromCSV(productList, "Database/products.csv");
     while (true) {
         system("cls");
-        cout << "Admin Menu:\n";
-        cout << "1. User Management\n2. Product Management\n3. Back\n";
+        cout << BOLD << GRAY << string(50, '-') << RESET << endl;
+        cout << "Your current role: " << RED << "admin" << RESET << endl;
+        cout << "   1. View inventory\n   2. View user information\n   3. Check log in\n   4. Back\n";
+        cout << BOLD << GRAY << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
         int choice;
         cin >> choice;
         cin.ignore(); // Clear input buffer
 
         switch (choice) {
-            case 1: funcUserManagementMenu(userList); break;
-            case 2: funcProductManagementMenu(productList); break; // Assuming this function is defined
-            case 3: return; // Back to main menu
+            case 1: productInventory(productList); break;
+            // case 2: funcProductManagementMenu(productList); break; // Assuming this function is defined
+            case 3: return; // Back to main m=enu
             default: cout << RED << "Invalid option! Please try again." << RESET << endl; break;
         }
     }
