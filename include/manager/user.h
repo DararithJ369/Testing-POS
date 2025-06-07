@@ -681,6 +681,7 @@ void funcModifyOwnInfo(funcListUser* list, string loggedEmail){
 
 void displayOwnInfo(funcListUser* userList, string loggedEmail) {
     funcUserNode* current = userList->head;
+    loggedEmail = catchEmailFromTemporaryEmail(); // just assign, don't redeclare
     while (current) {
         if (current->email == loggedEmail) {
             cout << YELLOW << "Your Information:\n" << RESET;
@@ -738,7 +739,15 @@ void modifyInformation(funcListUser* list, string loggedEmail, int check){
                 case 3: system("cls"); current->age = funcAgeMod(current->age); break;
                 case 4: system("cls"); current->phone = funcPhoneMod(current->phone); break;
                 case 5: system("cls"); current->role = funcRoleMod(current->role); break;
-                case 6: system("cls"); current->email = funcEmailMod(current->email); break;
+                case 6: {
+                    system("cls"); 
+                    string updatedEmail = funcEmailMod(current->email); 
+                    current->email = updatedEmail;
+                    loggedEmail = updatedEmail;
+                    saveEmailToTemporaryFile(updatedEmail);
+                    funcSaveUsers(list, "../Database/users.csv");
+                    break;
+                };
                 case 7: system("cls"); current->password = funcPasswordMod(current->password); break;
                 case 8: system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return; // exit update menu
                 default: cout << RED << "Invalid option! Please try again.\n" << RESET; break;
@@ -759,7 +768,15 @@ void modifyInformation(funcListUser* list, string loggedEmail, int check){
                 case 2: system("cls"); current->gender = funcGenderMod(current->gender); break;
                 case 3: system("cls"); current->age = funcAgeMod(current->age); break;
                 case 4: system("cls"); current->phone = funcPhoneMod(current->phone); break;
-                case 5: system("cls"); current->email = funcEmailMod(current->email); break;
+                case 5: {
+                    system("cls"); 
+                    string updatedEmail = funcEmailMod(current->email); 
+                    current->email = updatedEmail;
+                    loggedEmail = updatedEmail;
+                    saveEmailToTemporaryFile(updatedEmail);
+                    funcSaveUsers(list, "../Database/users.csv");
+                    break;
+                }
                 case 6: system("cls"); current->password = funcPasswordMod(current->password); break;
                 case 7: system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return; // exit update menu
                 default: cout << RED << "Invalid option! Please try again.\n" << RESET; break;

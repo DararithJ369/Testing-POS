@@ -9,3 +9,11 @@ string catchEmailFromTemporaryEmail(){
     file.close();
     return email;
 }
+
+void saveEmailToTemporaryFile(string email) {
+    ofstream file("../Database/temporary_user.txt", ios::out);
+    if (file.is_open()) {
+        file << email;
+        file.close();
+    }
+}
