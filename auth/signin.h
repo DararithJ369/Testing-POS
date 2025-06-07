@@ -136,7 +136,7 @@ int verifyUserSignIn(){
         cout << "Enter email        : " << input.email << endl;
         input.password = getPassInSignIn();
         if (verifyEmailAndPassInSignIn(s, input.email, input.password)){
-            cout << GREEN << "You are sign in successfully!" << RESET << endl;
+            cout << GREEN << "\nYou are sign in successfully!" << RESET << endl;
             system("pause");
             return verifyRoleInSignIn(s, input.email, input.password);
         }

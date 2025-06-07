@@ -163,7 +163,7 @@ void adminMenu(){
         system("cls");
         cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Your current role: " << RED << "admin" << RESET << endl;
-        cout << "   1. View inventory\n   2. View user information\n3.   Add new user\n   4. Check log in\n   4. Back\n";
+        cout << "   1. View inventory\n   2. View user information\n   3.   Add new user\n   4. Check log in\n   5. Back\n";
         cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
         cin >> choice;

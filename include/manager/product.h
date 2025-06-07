@@ -259,7 +259,7 @@ void addNewProduct(funcListProduct* list) {
             int addStock;
             cout << "Enter quantity to add to stock: "; cin >> addStock;
             exist->stock += addStock;
-            saveAllProductsToCSV(list, "Database/products.csv");
+            saveAllProductsToCSV(list, "../Database/products.csv");
             cout << GREEN << "\nProduct stock updated successfully!" << RESET << endl;
             system("pause");
             system("cls");
@@ -288,7 +288,7 @@ void addNewProduct(funcListProduct* list) {
     cout << "Product Stock:     " << Product.stock << endl;
     cout << "Product Discount:  " << fixed << setprecision(2) << Product.discount * 100.0 << "%" << endl;
     addProductEnd(list, Product.id, Product.name, Product.category, Product.brand, Product.price, Product.unit, Product.stock, Product.discount);
-    saveAllProductsToCSV(list, "Database/products.csv");
+    saveAllProductsToCSV(list, "../Database/products.csv");
     cout << GREEN << "\nNew product has been added successfully!" << RESET << endl;
     system("pause"); 
     system("cls");
@@ -311,7 +311,7 @@ void deleteProductByID(funcListProduct* list) {
         int idToDelete = stoi(id);
         deleteProductAt(list, idToDelete);
         cout << GREEN << "Product with ID " << id << " has been deleted successfully!" << RESET << endl;
-        saveAllProductsToCSV(list, "Database/products.csv");
+        saveAllProductsToCSV(list, "../Database/products.csv");
     }
     cout << endl;
     system("pause");
@@ -592,7 +592,7 @@ void modifyProduct(funcListProduct* list) {
 
         deleteProductAt(list, pos);
         addProductAt(list, pos, id, name, category, brand, price, unit, stock, discount);
-        saveAllProductsToCSV(list, "Database/products.csv");
+        saveAllProductsToCSV(list, "../Database/products.csv");
     }
     system("pause");
     system("cls");
@@ -918,7 +918,7 @@ void printReceipt(funcListProduct* list, bool check) {
          << setw(10) << "Unit" 
          << setw(10) << "Qty" 
          << setw(10) << "Discount" 
-         << right << setw(21) << "Total"
+         << setw(21) << "Total"
          << endl;
 
     time_t now = time(0);
@@ -939,7 +939,7 @@ void printReceipt(funcListProduct* list, bool check) {
              << setw(10) << cart->unit
              << setw(10) << cart->productSale 
              << setw(10) << cart->discount
-             << right << setw(21) << cart->price * cart->productSale
+             << setw(21) << cart->price * cart->productSale
              << endl;
         total += cart->price * cart->productSale;
         cart = cart->next;
@@ -961,11 +961,11 @@ void checkout(funcListProduct* list){
         transactionTotal += cart->price * cart->productSale;
         cart = cart->next;
     }
-    double currentTotal = getTotalMoneyFromFile("Database/total_money.txt");
+    double currentTotal = getTotalMoneyFromFile("../Database/total_money.txt");
     double newTotal = currentTotal + transactionTotal;
-    saveTotalMoneyToFile(newTotal, "Database/total_money.txt"); 
+    saveTotalMoneyToFile(newTotal, "../Database/total_money.txt"); 
     string loggedEmail = catchEmailFromTemporaryEmail();
-    saveTransactionToCSV(list, transactionTotal, loggedEmail, "Database/transactions.csv");
+    saveTransactionToCSV(list, transactionTotal, loggedEmail, "../Database/transactions.csv");
     funcProductNode* current = list->head;
     while(current != NULL){
         funcProductNode* temp = current;
