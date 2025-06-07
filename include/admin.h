@@ -6,12 +6,12 @@
 #include <windows.h>
 #include <cctype>
 #include "color.h"
-// #include "function.h"
 #include "user.h"
 #include "product.h"
 using namespace std;
 
 void productInventory(funcListProduct* productList){ 
+    int choice;
     while(true){
         displayAllProducts(productList, false);
         cout << BOLD << string(50, '-') << RESET << endl;
@@ -19,94 +19,50 @@ void productInventory(funcListProduct* productList){
         cout << "   1. Add new product\n   2. Modify product\n   3. Short product\n   4. Search product\n   5. Delete product\n   6. Back\n";
         cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
-        int choice;
         cin >> choice;
         cin.ignore(); // Clear input 
         switch(choice){
-            case 1:{
-                system("cls");
-                addNewProduct(productList);
-                break;
-            }
-            case 2:{
-                system("cls");
-                modifyProduct(productList);
-                break;
-            }
-            case 3:{
-                system("cls");
-                sortProducts(productList);
-                break;
-            }
-            case 4:{
-                system("cls");
-                searchProduct(productList);
-                cout << GREEN << "Product sorted successfully!" << RESET << endl;
-                break;
-            }
-            case 5:{
-                system("cls");
-                deleteProductByID(productList);
-                break;
-            }
-            case 6:{
-                system("cls");
-                cout << YELLOW << "Returning to the previous menu..." << RESET << endl;
-                system("pause");
-                system("cls");
-                return;
-            }
-            default:{
-                system("cls");
-                cout << RED << "Invalid input! Please try again." << RESET << endl;
-                break;
-            }
+            case 1:system("cls"); addNewProduct(productList); break;
+            case 2:system("cls"); modifyProduct(productList); break;
+            case 3:system("cls"); sortProducts(productList); cout << GREEN << "Product sorted successfully!" << RESET << endl; break;
+            case 4:system("cls"); searchProduct(productList); break;
+            case 5:system("cls"); deleteProductByID(productList); break;
+            case 6:system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); system("cls"); return;
+            default:system("cls"); cout << RED << "Invalid input! Please try again." << RESET << endl; break;
         }
     }
     
 }
 
 void viewOwnInformation(funcListUser* userList, string loggedEmail){
+    int choice;
     while(true){
-        int choice;
         system("cls");
         displayOwnInfo(userList, loggedEmail);
         cout << string(50, '-') << endl;
-        cout << "   1. Edit own information\n   2. back\n";
+        cout << "   1. Edit own information\n   2. Back\n";
         cout << string(50, '-') << endl;
         cout << "Enter your choice: ";
         cin >> choice;
         cin.ignore();
         switch(choice){
-            case 1: {
-                system("cls");
-                adminModifyInformation(userList, loggedEmail);
-                break;
-            }
-            case 2: {
-                system("cls");
-                cout << YELLOW << "Returning to the previous menu..." << RESET << endl;
-                system("pause");
-                return;
-            }
-            default : {
-                cout << RED << "\nInvalid input! Please try again." << RESET << endl;
-                break; 
-            }
+            case 1:system("cls"); adminModifyInformation(userList, loggedEmail); break;
+            case 2:system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return;
+            default : cout << RED << "\nInvalid input! Please try again." << RESET << endl; break; 
         }
     }
 }
 
 void viewUserInformation(funcListUser* userList){
     while(true){
-        int choice;
         funcUpdateUserToCSV(userList);
         // system("pause");
         break;
     }
 }
 
-void information(funcListUser* userList, string loggedEmail){
+void adminInformation(funcListUser* userList, string loggedEmail){
+    int choice;
     while(true){
         system("cls");
         cout << BOLD << string(50, '-') << RESET << endl;
@@ -114,7 +70,6 @@ void information(funcListUser* userList, string loggedEmail){
         cout << "   1. View own information\n   2. View/update user information\n   3. Back\n";
         cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
-        int choice;
         cin >> choice; 
         switch(choice){
             case 1:{
@@ -226,7 +181,8 @@ void showUserLog(){
     } while (logChoice != 4);
 }
 
-void adminMenu() {
+void adminMenu(){
+    int choice;
     string loggedEmail = catchEmailFromTemporaryEmail();
     funcListUser* userList = createfuncListUser();
     funcListProduct* productList = createfuncListProduct();    
@@ -239,15 +195,21 @@ void adminMenu() {
         cout << "   1. View inventory\n   2. View user information\n   3. Check log in\n   4. Back\n";
         cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
-        int choice;
         cin >> choice;
         cin.ignore(); // Clear input buffer
 
         switch (choice) {
-            case 1: system("cls"); productInventory(productList); break;
-            case 2: system("cls"); information(userList, loggedEmail); break;
-            case 3: system("cls"); showUserLog(); break;
-            case 4: return; // Back to main menu
+            case 1:system("cls"); productInventory(productList); break;
+            case 2:system("cls"); adminInformation(userList, loggedEmail); break;
+            case 3:system("cls"); showUserLog(); break;
+            case 4:{
+                system("cls"); 
+                cout << YELLOW << "Returning to previous menu." << RESET << endl;
+                string currentEmail = catchEmailFromTemporaryEmail();
+                logUserAction(currentEmail, "Exited");
+                system("pause");
+                return;
+            }
             default: cout << RED << "Invalid option! Please try again." << RESET << endl; break;
         }
     }
