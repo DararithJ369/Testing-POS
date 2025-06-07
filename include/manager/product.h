@@ -1,11 +1,4 @@
 #pragma once
-#include <iostream>
-#include "color.h"
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <windows.h>
-#include <ctime>
 using namespace std;
 
 struct funcProductNode{

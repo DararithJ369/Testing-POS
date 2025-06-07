@@ -1,12 +1,4 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <conio.h>
-#include <string>
-#include <cctype>
-#include <sstream>
-#include "color.h"
-#include "utils.h"
 using namespace std;
 
 struct signupNode{
@@ -71,10 +63,9 @@ void readAllUsersFromCSV(signupStack* s, string filename) {
 }
 
 void writeUserToCSV(string name, int age, char gender, string phone, string role, string email, string password){
-    system("cls");
-    cout << GREEN << "You are sign up successfully!!!" << RESET << endl;
+    cout << endl << GREEN << "You are sign up successfully!!!" << RESET << endl;
     ofstream file;
-    file.open("Database/users.csv", ios::app);
+    file.open("../Database/users.csv", ios::app);
     if (file.is_open()) {
         file << name << "," << age << "," << gender << "," << phone << "," << role << "," << email << "," << password << endl;
         file.close();
@@ -127,7 +118,7 @@ void verifyInfoFromUser(string email, string password) {
     // check name
     do {
         system("cls");
-        cout << VIOLET << "Verify your information\n" << RESET << endl;
+        cout << YELLOW << "Verify your information" << RESET << endl;
         if (!check) cout << RED << "Invalid name! Name shouldn't have symbol or number!" << RESET<< endl;
         cout << "Full Name      : "; getline(cin >> ws, input.name);
         check = isAllAlphabets(input.name);
@@ -137,7 +128,7 @@ void verifyInfoFromUser(string email, string password) {
     // check Age
     do {
         system("cls");
-        cout << VIOLET << "Verify your information\n" << RESET << endl;
+        cout << YELLOW << "Verify your information" << RESET << endl;
         if (!check) cout << RED << "Invalid age! Please enter age (1-99)!" << endl;
         cout << "Full Name      : " << input.name << endl;
         cout << "Age            : "; cin >> input.age;
@@ -147,7 +138,7 @@ void verifyInfoFromUser(string email, string password) {
     // check gender
     do {
         system("cls");
-        cout << VIOLET << "Verify your information\n" << RESET << endl;
+        cout << YELLOW << "Verify your information" << RESET << endl;
         if (!check) cout << RED << "Invalid gender! Please enter (M/F)!" << RESET<< endl;
         cout << "Full Name      : " << input.name << endl;
         cout << "Age            : " << input.age << endl;
@@ -159,7 +150,7 @@ void verifyInfoFromUser(string email, string password) {
     // check phone
     do {
         system("cls");
-        cout << VIOLET << "Verify your information\n" << RESET << endl;
+        cout << YELLOW << "Verify your information" << RESET << endl;
         if (!check) cout << RED << "Invalid phone number!"<< RESET << endl;
         cout << "Full Name      : " << input.name << endl;
         cout << "Age            : " << input.age << endl;
@@ -169,7 +160,7 @@ void verifyInfoFromUser(string email, string password) {
     } while (!check);
 
     ofstream user_email;
-    user_email.open("Database/temporary_user.txt", ios::out);
+    user_email.open("../Database/temporary_user.txt", ios::out);
     user_email << email;
     user_email.close();
 
@@ -196,7 +187,7 @@ bool isEmailExists(signupStack *s, string email){
 int verifyEmailAndPassFromUser(){
     system("cls");
     signupStack *s = createEmptySignUpStack();
-    readAllUsersFromCSV(s, "Database/users.csv");
+    readAllUsersFromCSV(s, "../Database/users.csv");
     signupNode input;
     int count = 0;
     cout << BOLD << YELLOW << "Create account" << RESET << endl;
@@ -212,14 +203,22 @@ int verifyEmailAndPassFromUser(){
     system("cls");
     cout << GREEN << "Email accepted!" << RESET << endl;
     cout << "Enter email        : " << input.email << endl;
-    input.password = getPassword();
-    while (true){
-        if (verifyPassword() == input.password){
+
+    while (true) {
+        input.password = getPassword();
+        if (input.password.length() < 6) {
+            system("cls");
+            cout << RED << "Password must be at least 6 characters!" << RESET << endl;
+            cout << "Enter email        : " << input.email << endl;
+            continue;
+        }
+        string confirm = verifyPassword();
+        if (confirm == input.password){
             system("cls");
             cout << GREEN << "Account accepted!" << RESET << endl;
             cout << "Enter email        : " << input.email << endl;
-            cout << "Enter password     : "; for(int i : input.password){cout << "*";} cout << endl;
-            cout << "Confirm password   : "; for(int i : input.password){cout << "*";} cout << "\n" << endl;
+            cout << "Enter password     : "; for(int i = 0; i < input.password.length(); ++i){cout << "*";} cout << endl;
+            cout << "Confirm password   : "; for(int i = 0; i < input.password.length(); ++i){cout << "*";} cout << "\n" << endl;
             verifyInfoFromUser(input.email, input.password);
             return 1;
         } else{
@@ -227,7 +226,7 @@ int verifyEmailAndPassFromUser(){
             cout << RED << "Confirm password incorrect!" << RESET << endl;
             cout << "Enter email        : " << input.email << endl;
             cout << "Enter password     : ";
-            for(int i : input.password){
+            for(int i = 0; i < input.password.length(); ++i){
                 cout << "*";
             } cout << endl;
         }

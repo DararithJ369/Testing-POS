@@ -1,11 +1,11 @@
 #include<iostream>
-#include"include/catch_temporary_user.h"
+#include"include/utils.h"
+#include"include/color.h"
 #include"include/authentication.h"
+#include"include/catch_temporary_user.h"
 #include"include/admin.h"
 #include"include/customer.h"
 #include"include/manager.h"
-#include"include/color.h"
-#include"include/utils.h"
 using namespace std;
 
 int main(){

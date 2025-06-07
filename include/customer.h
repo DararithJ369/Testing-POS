@@ -1,10 +1,4 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include "color.h"
-#include "product.h"
-#include "user.h"
-// #include "storage.h"  // Assume this handles product storage/display/find
 using namespace std;
 
 void selectAllProducts(funcListProduct* list, funcListProduct* cartList){
@@ -97,23 +91,23 @@ void helpForCustomer(){
     cout << BLUE << "Exit our program" << RESET << " : Exit the whole program." << endl;
 }
 
-
 void customerMenu(){
     int choice;
     funcListUser* userList = createfuncListUser();
     funcListProduct* cartList = createfuncListProduct();
     funcListProduct* list = createfuncListProduct();
-    loadAllProductsFromCSV(list, "Database/products.csv");
-    funcLoadUsers(userList, "Database/users.csv");
+    loadAllProductsFromCSV(list, "../Database/products.csv");
+    funcLoadUsers(userList, "../Database/users.csv");
     string loggedEmail = catchEmailFromTemporaryEmail();
     while(true){
+        system("cls");
         cout << BOLD << GRAY << string(50, '-') << RESET << endl;
         cout << "Your current role: " << YELLOW << "customer" << RESET << endl;
         cout << "   1. View own information\n   2. Select product\n   3. View help\n   4. Back" << endl;
         cout << BOLD << GRAY << string(50, '-') << RESET << endl;
         cout << "Enter your option: ", cin >> choice;
         switch(choice){
-            case 1:system("cls"); viewOwnInformation(userList, loggedEmail); break;
+            case 1:system("cls"); viewOwnInformation(userList, loggedEmail, 0); break;
             case 2:system("cls"); selectAllProducts(list, cartList); break;
             case 3:system("cls"); helpForCustomer(); system("pause"); break;
             case 4:{

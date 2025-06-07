@@ -1,9 +1,5 @@
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <conio.h>
-// #include "color.h"
+// #include "../include/color.h"
 using namespace std;
 
 struct signinNode{ 
@@ -101,7 +97,7 @@ int verifyRoleInSignIn(signinStack *s, string email, string password){
     string role;
 
     ofstream user_email;
-    user_email.open("Database/temporary_user.txt", ios::out);
+    user_email.open("../Database/temporary_user.txt", ios::out);
     user_email << email;
     user_email.close();
 
@@ -122,7 +118,7 @@ int verifyRoleInSignIn(signinStack *s, string email, string password){
 int verifyUserSignIn(){
     system("cls");
     signinStack *s = createEmptySignInStack();
-    getAllUsersFromCSV(s, "Database/users.csv");
+    getAllUsersFromCSV(s, "../Database/users.csv");
     signinNode input;
     int count = 0;
     cout << BOLD << YELLOW << "Sign in your account" << RESET << endl;
@@ -140,7 +136,6 @@ int verifyUserSignIn(){
         cout << "Enter email        : " << input.email << endl;
         input.password = getPassInSignIn();
         if (verifyEmailAndPassInSignIn(s, input.email, input.password)){
-            cout << endl;
             cout << GREEN << "You are sign in successfully!" << RESET << endl;
             system("pause");
             return verifyRoleInSignIn(s, input.email, input.password);

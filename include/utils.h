@@ -1,7 +1,4 @@
 #pragma once
-#include <string>
-#include <fstream>
-#include <ctime>
 using namespace std;
 
 bool isAllAlphabets(string str) {
@@ -26,7 +23,7 @@ string Capitalization(string index){
 }
 
 inline void logUserAction(const string& email, const string& action) {
-    ofstream log("Database/userlog.txt", ios::app);
+    ofstream log("../Database/userlog.txt", ios::app);
     if (!log.is_open()) return;
     time_t now = time(0);
     tm* ltm = localtime(&now);

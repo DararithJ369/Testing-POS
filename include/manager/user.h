@@ -1,11 +1,4 @@
 #pragma once
-#include <iostream>
-#include "color.h"
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <windows.h>
-#include "utils.h"
 using namespace std;
 
 struct funcUserNode{
@@ -313,7 +306,7 @@ void funcDeleteUserByEmail(funcListUser* list) {
         }
         current = current->next;
     }
-    funcSaveUsers(list, "Database/users.csv");
+    funcSaveUsers(list, "../Database/users.csv");
     system("pause");
 }
 
@@ -322,6 +315,7 @@ string funcNameMod(string newName){
         cout << "Current name: " << newName << endl;
         cout << "Enter new name: ";
         getline(cin >> ws, newName);
+        newName = Capitalization(newName);
         system("cls");
         if(isAllAlphabets(newName)) {
             cout << GREEN << "New name has been changed successfully\n" << RESET << endl;
@@ -510,7 +504,7 @@ void funcUpdateUserToCSV(funcListUser* list){
             choice = toupper(choice);
             switch(choice){
                 case 'Y': system("cls"); cout << GREEN << "The information has been changed successfully\n" << RESET << endl; break;
-                case 'N': system("cls"); funcSaveUsers(list, "Database/users.csv"); return;
+                case 'N': system("cls"); funcSaveUsers(list, "../Database/users.csv"); return;
                 default: cout << RED << "Invalid choice! Please enter Y or N.\n" << RESET << endl;
             }
         }
@@ -528,14 +522,15 @@ void addNewUsers(funcListUser* list) {
         system("cls");
         do{
             system("cls");
-            cout << VIOLET << "Add New User" << RESET << endl << endl;
+            cout << YELLOW << "\t\tAdd New User" << RESET << endl;
+            cout << "---------------------------------------\n";
             if(!check) cout << RED << "Invalid name! Name shouldn't have symbol or number!" << RESET << endl;
             cout << "Full name: "; getline(cin >> ws, name);
             check = isAllAlphabets(name);
         } while (!check);
         do {
             system("cls");
-            cout << VIOLET << "\t\tAdd New User\n";
+            cout << YELLOW << "\t\tAdd New User\n";
             cout << "---------------------------------------\n" << RESET;
             if(!check) cout << RED << "Invalid age! Please enter age (1-99)!" << RESET << endl;
             cout << "Full name: " << name << endl;
@@ -544,8 +539,8 @@ void addNewUsers(funcListUser* list) {
         } while (!check);
         do {
             system("cls");
-            cout << VIOLET << "\t\tAdd New User\n";
-            cout << "---------------------------------------\n" << RESET;
+            cout << YELLOW << "\t\tAdd New User" << RESET << endl;
+            cout << "---------------------------------------\n";
             if(!check) cout << RED << "Invalid gender! Please enter (M/F)!" << RESET << endl;
             cout << "Full name: " << name << endl;
             cout << "Age: " << age << endl;
@@ -555,8 +550,8 @@ void addNewUsers(funcListUser* list) {
         } while (!check);
         do {
             system("cls");
-            cout << VIOLET << "\t\tAdd New User\n";
-            cout << "---------------------------------------\n" << RESET;
+            cout << YELLOW << "\t\tAdd New User" << RESET << endl;
+            cout << "---------------------------------------\n";
             if(!check) cout << RED << "Invalid phone number!" << RESET << endl;
             cout << "Full name: " << name << endl;
             cout << "Age: " << age << endl;
@@ -566,8 +561,8 @@ void addNewUsers(funcListUser* list) {
         } while (!check);
         do {
             system("cls");
-            cout << VIOLET << "\t\tAdd New User\n";
-            cout << "---------------------------------------\n" << RESET;
+            cout << YELLOW << "\t\tAdd New User" << RESET << endl;
+            cout << "---------------------------------------\n";
             if(!check) cout << RED << "Invalid role! Please enter (admin, manager, cashier, customer)!" << RESET << endl;
             cout << "Full name: " << name << endl;
             cout << "Age: " << age << endl;
@@ -579,8 +574,8 @@ void addNewUsers(funcListUser* list) {
         } while (!check);
         do {
             system("cls");
-            cout << VIOLET << "\t\tAdd New User\n";
-            cout << "---------------------------------------\n" << RESET;
+            cout << YELLOW << "\t\tAdd New User" << RESET << endl;
+            cout << "---------------------------------------\n";
             if(!check) cout << RED << "Invalid email! Please enter a valid email (must end with @gmail.com)!" << RESET << endl;
             cout << "Full name: " << name << endl;
             cout << "Age: " << age << endl;
@@ -592,8 +587,8 @@ void addNewUsers(funcListUser* list) {
         } while (!check);
         do {
             system("cls");
-            cout << VIOLET << "\t\tAdd New User\n";
-            cout << "---------------------------------------\n" << RESET;
+            cout << YELLOW << "\t\tAdd New User" << RESET << endl;
+            cout << "---------------------------------------\n";
             if(!check) cout << RED << "Invalid password! Please enter a valid password (at least 6 characters long)!" << RESET << endl;
             cout << "Full name: " << name << endl;
             cout << "Age: " << age << endl;
@@ -612,8 +607,8 @@ void addNewUsers(funcListUser* list) {
             cin >> choice;
             choice = toupper(choice);
             switch(choice){
-                case 'Y': system("cls"); cout << GREEN << "New user has been added successfully!\n" << RESET; break;
-                case 'N': system("cls"); funcSaveUsers(list, "Database/users.csv"); validInput = true; break;
+                case 'Y': system("cls"); cout << GREEN << "New user has been added successfully!\n" << RESET; system("pause"); break;
+                case 'N': system("cls"); funcSaveUsers(list, "../Database/users.csv"); validInput = true; break;
                 default: cout << RED << "Invalid choice! Please enter Y or N.\n" << RESET << endl;
             }
         }
@@ -702,7 +697,7 @@ void displayOwnInfo(funcListUser* userList, string loggedEmail) {
     cout << RED << "No user found with email: " << loggedEmail << RESET << endl;
 }
 
-void adminModifyInformation(funcListUser* list, string loggedEmail){
+void modifyInformation(funcListUser* list, string loggedEmail, int check){
     funcUserNode* current = list->head;
     int option = 0;
     int select;
@@ -718,39 +713,58 @@ void adminModifyInformation(funcListUser* list, string loggedEmail){
             cout << "Phone      : " << current->phone << endl;
             cout << "Role       : " << current->role << endl;
             cout << "Email      : " << current->email << endl;
-            cout << "Password   : " << current->password << endl;
+            if(check == 1) cout << "Password   : " << current->password << endl;
             cout << string(50, '-') << endl << endl;
-            // found = true;
             break;
         }
         current = current->next;
     }    
     do {
         cout << YELLOW << "Update your information:\n" << RESET;
-        cout << "1. Update Name\n";
-        cout << "2. Update Gender\n";
-        cout << "3. Update Age\n";
-        cout << "4. Update Phone\n";
-        cout << "5. Update Role\n";
-        cout << "6. Update Email\n";
-        cout << "7. Update Password\n";
-        cout << "8. Back to Main Menu\n";
-        cout << "Select an option: ";
-        cin >> option;
-
-        switch(option) {
-            case 1: system("cls"); current->name = funcNameMod(current->name); break;
-            case 2: system("cls"); current->gender = funcGenderMod(current->gender); break;
-            case 3: system("cls"); current->age = funcAgeMod(current->age); break;
-            case 4: system("cls"); current->phone = funcPhoneMod(current->phone); break;
-            case 5: system("cls"); current->role = funcRoleMod(current->role); break;
-            case 6: system("cls"); current->email = funcEmailMod(current->email); break;
-            case 7: system("cls"); current->password = funcPasswordMod(current->password); break;
-            case 8: system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return; // exit update menu
-            default: cout << RED << "Invalid option! Please try again.\n" << RESET; break;
+        if(check == 1){
+            cout << "1. Update Name\n";
+            cout << "2. Update Gender\n";
+            cout << "3. Update Age\n";
+            cout << "4. Update Phone\n";
+            cout << "5. Update Role\n";
+            cout << "6. Update Email\n";
+            cout << "7. Update Password\n";
+            cout << "8. Back to Main Menu\n";
+            cout << "Select an option: ";
+            cin >> option;
+            switch(option) {
+                case 1: system("cls"); current->name = funcNameMod(current->name); break;
+                case 2: system("cls"); current->gender = funcGenderMod(current->gender); break;
+                case 3: system("cls"); current->age = funcAgeMod(current->age); break;
+                case 4: system("cls"); current->phone = funcPhoneMod(current->phone); break;
+                case 5: system("cls"); current->role = funcRoleMod(current->role); break;
+                case 6: system("cls"); current->email = funcEmailMod(current->email); break;
+                case 7: system("cls"); current->password = funcPasswordMod(current->password); break;
+                case 8: system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return; // exit update menu
+                default: cout << RED << "Invalid option! Please try again.\n" << RESET; break;
+            }
         }
-
-        funcUpdateUserToList(list, select, current->name, current->age, current->gender, current->phone, current->role, current->email, current->password);
+        else{
+            cout << "1. Update Name\n";
+            cout << "2. Update Gender\n";
+            cout << "3. Update Age\n";
+            cout << "4. Update Phone\n";
+            cout << "5. Update Email\n";
+            cout << "6. Update Password\n";
+            cout << "7. Back to Main Menu\n";
+            cout << "Select an option: ";
+            cin >> option;
+            switch(option) {
+                case 1: system("cls"); current->name = funcNameMod(current->name); break;
+                case 2: system("cls"); current->gender = funcGenderMod(current->gender); break;
+                case 3: system("cls"); current->age = funcAgeMod(current->age); break;
+                case 4: system("cls"); current->phone = funcPhoneMod(current->phone); break;
+                case 5: system("cls"); current->email = funcEmailMod(current->email); break;
+                case 6: system("cls"); current->password = funcPasswordMod(current->password); break;
+                case 7: system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return; // exit update menu
+                default: cout << RED << "Invalid option! Please try again.\n" << RESET; break;
+            }
+        }
 
         char choice = 'P';
         while(choice != 'Y' && choice != 'N') {
@@ -759,10 +773,29 @@ void adminModifyInformation(funcListUser* list, string loggedEmail){
             choice = toupper(choice);
             switch(choice){
                 case 'Y': system("cls"); cout << GREEN << "The information has been changed successfully\n" << RESET << endl; break;
-                case 'N': system("cls"); funcSaveUsers(list, "Database/users.csv"); return;
+                case 'N': system("cls"); funcSaveUsers(list, "../Database/users.csv"); return;
                 default: cout << RED << "Invalid choice! Please enter Y or N.\n" << RESET << endl;
             }
         }
 
     } while(option != 8);
+}
+
+void viewOwnInformation(funcListUser* userList, string loggedEmail, int check){
+    int choice;
+    while(true){
+        system("cls");
+        displayOwnInfo(userList, loggedEmail);
+        cout << string(50, '-') << endl;
+        cout << "   1. Edit own information\n   2. Back\n";
+        cout << string(50, '-') << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+        switch(choice){
+            case 1:system("cls"); modifyInformation(userList, loggedEmail, check); break;
+            case 2:system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return;
+            default : cout << RED << "\nInvalid input! Please try again." << RESET << endl; break; 
+        }
+    }
 }

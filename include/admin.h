@@ -1,13 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <string>
-#include <windows.h>
-#include <cctype>
-#include "color.h"
-#include "user.h"
-#include "product.h"
+#pragma once
 using namespace std;
 
 void productInventory(funcListProduct* productList){ 
@@ -34,29 +25,9 @@ void productInventory(funcListProduct* productList){
     
 }
 
-void viewOwnInformation(funcListUser* userList, string loggedEmail){
-    int choice;
-    while(true){
-        system("cls");
-        displayOwnInfo(userList, loggedEmail);
-        cout << string(50, '-') << endl;
-        cout << "   1. Edit own information\n   2. Back\n";
-        cout << string(50, '-') << endl;
-        cout << "Enter your choice: ";
-        cin >> choice;
-        cin.ignore();
-        switch(choice){
-            case 1:system("cls"); adminModifyInformation(userList, loggedEmail); break;
-            case 2:system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return;
-            default : cout << RED << "\nInvalid input! Please try again." << RESET << endl; break; 
-        }
-    }
-}
-
 void viewUserInformation(funcListUser* userList){
     while(true){
         funcUpdateUserToCSV(userList);
-        // system("pause");
         break;
     }
 }
@@ -74,7 +45,7 @@ void adminInformation(funcListUser* userList, string loggedEmail){
         switch(choice){
             case 1:{
                 system("cls");
-                viewOwnInformation(userList, loggedEmail);
+                viewOwnInformation(userList, loggedEmail, 1);
                 break;
             }
             case 2:{
@@ -99,7 +70,7 @@ void adminInformation(funcListUser* userList, string loggedEmail){
 
 void showSignedUpLog() {
     system("cls");
-    ifstream log("Database/userlog.txt");
+    ifstream log("../Database/userlog.txt");
     if (!log.is_open()) {
         cout << RED << "No log file found." << RESET << endl;
         system("pause");
@@ -119,7 +90,7 @@ void showSignedUpLog() {
 
 void showSignedInLog() {
     system("cls");
-    ifstream log("Database/userlog.txt");
+    ifstream log("../Database/userlog.txt");
     if (!log.is_open()) {
         cout << RED << "No log file found." << RESET << endl;
         system("pause");
@@ -139,7 +110,7 @@ void showSignedInLog() {
 
 void showExitedLog() {
     system("cls");
-    ifstream log("Database/userlog.txt");
+    ifstream log("../Database/userlog.txt");
     if (!log.is_open()) {
         cout << RED << "No log file found." << RESET << endl;
         system("pause");
@@ -186,13 +157,13 @@ void adminMenu(){
     string loggedEmail = catchEmailFromTemporaryEmail();
     funcListUser* userList = createfuncListUser();
     funcListProduct* productList = createfuncListProduct();    
-    funcLoadUsers(userList, "Database/users.csv");
-    loadAllProductsFromCSV(productList, "Database/products.csv");
+    funcLoadUsers(userList, "../Database/users.csv");
+    loadAllProductsFromCSV(productList, "../Database/products.csv");
     while (true) {
         system("cls");
         cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Your current role: " << RED << "admin" << RESET << endl;
-        cout << "   1. View inventory\n   2. View user information\n   3. Check log in\n   4. Back\n";
+        cout << "   1. View inventory\n   2. View user information\n3.   Add new user\n   4. Check log in\n   4. Back\n";
         cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
         cin >> choice;
@@ -201,8 +172,9 @@ void adminMenu(){
         switch (choice) {
             case 1:system("cls"); productInventory(productList); break;
             case 2:system("cls"); adminInformation(userList, loggedEmail); break;
-            case 3:system("cls"); showUserLog(); break;
-            case 4:{
+            case 3:system("cls"); addNewUsers(userList); break;
+            case 4:system("cls"); showUserLog(); break;
+            case 5:{
                 system("cls"); 
                 cout << YELLOW << "Returning to previous menu." << RESET << endl;
                 string currentEmail = catchEmailFromTemporaryEmail();

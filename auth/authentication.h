@@ -1,7 +1,4 @@
 #include <iostream> 
-#include <string>
-#include <windows.h>
-#include "color.h"
 #include "registration.h"
 #include "signin.h"
 using namespace std;
@@ -30,7 +27,6 @@ int Introduction(){
     cout << "Select an option to continue: " << YELLOW; cin >> option; cout << RESET;
     return option;
 }
-
 
 void ExIT(int time){
     for (int i = time; i > 0; i--){

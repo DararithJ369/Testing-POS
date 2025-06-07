@@ -1,8 +1,4 @@
-#include<iostream>
-#include <fstream>
-#include "user.h"
-#include "product.h"
-#include "color.h"
+#pragma once
 using namespace std;
 
 void viewInventory(funcListProduct* productList){ 
@@ -41,7 +37,7 @@ void information(funcListUser* userlist, string loggedEmail) {
         cin >> choice;
         cin.ignore();
         switch(choice) {
-            case 1:system("cls"); viewOwnInformation(userlist, loggedEmail); break;
+            case 1:system("cls"); viewOwnInformation(userlist, loggedEmail, 0); break;
             case 2:system("cls"); funcDisplayUsers(userlist, 1); break;
             case 3:system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause");  return;
             default :system("cls"); cout << RED << "Invalid input! Please try again." << RESET << endl; break; 
@@ -64,7 +60,7 @@ void posBalance(){
             case 1: {
                 system("cls");
                 ifstream transaction;
-                transaction.open("Database/transactions.csv");
+                transaction.open("../Database/transactions.csv");
                 if(!transaction.is_open()) cout << RED << "File not Found!!" << RESET << endl;
                 string line;
                 cout << YELLOW << "Transaction History" << RESET << endl;
@@ -99,7 +95,7 @@ void posBalance(){
             }
             case 2: {
                 system("cls");
-                ifstream transaction("Database/transactions.csv");
+                ifstream transaction("../Database/transactions.csv");
                 if (!transaction.is_open()) {
                     cout << RED << "Transaction file not found!" << RESET << endl;
                     system("pause");
@@ -159,8 +155,8 @@ void managerMenu(){
     string loggedEmail = catchEmailFromTemporaryEmail();
     funcListProduct* productList = createfuncListProduct();
     funcListUser* userList = createfuncListUser();
-    loadAllProductsFromCSV(productList, "Database/products.csv");
-    funcLoadUsers(userList, "Database/users.csv");
+    loadAllProductsFromCSV(productList, "../Database/products.csv");
+    funcLoadUsers(userList, "../Database/users.csv");
     int choice;
     while(true){
         system("cls");
