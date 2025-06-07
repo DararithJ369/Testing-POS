@@ -9,6 +9,7 @@ enum LOGIN{
     EXIT
 };
 
+int count = 0;
 int Introduction(){
     int option;
     cout << " ____   ___  ____    ____            _                 " << endl;
@@ -18,13 +19,16 @@ int Introduction(){
     cout << "|_|    \\___/|____/  |____/ \\__, |___/\\__\\___|_| |_| |_|" << endl;
     cout << "                           |___/                       " << endl;
     cout << endl;
-    cout << GRAY; system ("pause"); cout << RESET << endl;
+    if(count == 0){
+        cout << GRAY; system ("pause"); cout << RESET << endl;
+    }
     cout << "Create or signin an account to continue our system " << endl;  
     cout << "   1. Create account                                 " << endl; 
     cout << "   2. Sign in to your account                        " << endl;
     cout << "   3. Exit the program                               " << endl;
     cout << BOLD << string(50, '-') << RESET << endl;
-    cout << "Select an option to continue: " << YELLOW; cin >> option; cout << RESET;
+    cout << "Select an option to continue: "; cin >> option;
+    if(cin.fail()){cin.clear(); cin.ignore(10000, '\n'); return -1;}
     return option;
 }
 
@@ -42,9 +46,9 @@ void ExIT(int time){
 }
 
 int login(){
-    system("cls");
     string currentEmail;
     while (true){
+        system("cls");
         switch (Introduction()){
             case SIGNUP:{
                 int result = verifyEmailAndPassFromUser();
@@ -59,8 +63,11 @@ int login(){
                 return result;
             }
             case EXIT: ExIT(3); break;
-            default: break;
+            default:
+                cout << RED << "Invalid input! Please try again." << RESET << endl;
+                system("pause");
+                break;
         }
+        count++;
     }
 }
-
