@@ -31,11 +31,11 @@ int Introduction(){
 void ExIT(int time){
     for (int i = time; i > 0; i--){
         system("cls");
-        cout << "The system will shut down in " << MAGENTA << i << RESET << ((i <= 1) ? " second" : " seconds");
+        cout << "The system will shut down in " << RED << i << RESET << ((i <= 1) ? " second" : " seconds");
         Sleep(1000);
     }
     system("cls");
-    cout << "Goodbye! Have a nice day!\n" << endl;
+    cout << "Goodbye! Have a nice day!" << endl;
     cout << system("pause"); cout << RESET;
     system("cls");
     exit(0);

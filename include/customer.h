@@ -5,7 +5,7 @@ void selectAllProducts(funcListProduct* list, funcListProduct* cartList){
     while(true){
         int choice;
         displayAllProducts(list, 0);
-        cout << CYAN << "\n\n==> Product Selection" << RESET << endl;
+        cout << YELLOW << "\n\n==> Product Selection" << RESET << endl;
         cout << "1. Add item to cart\n2. Remove item from cart\n3. View receipt\n4. Cancel\n5. Check out" << endl;
         calculateReceipt(cartList);
         cout << "Enter your option: "; cin >> choice;
@@ -76,8 +76,32 @@ void selectAllProducts(funcListProduct* list, funcListProduct* cartList){
                 break;
             }
             case 3:system("cls"); printReceipt(cartList, 1); system("pause"); break;
-            case 4:system("cls"); cout << YELLOW << "Returning to previous menu..." << RESET << endl; system("pause"); system("cls"); return;
-            case 5:system("cls");checkout(cartList); saveAllProductsToCSV(list, "Database/products.csv"); return;
+            case 4: {
+                // Return all cart items to main product list
+                funcProductNode* cartNode = cartList->head;
+                while (cartNode) {
+                    funcProductNode* mainProduct = findProductByID(list, cartNode->id);
+                    if (mainProduct) {
+                        mainProduct->stock += cartNode->productSale;
+                    }
+                    cartNode = cartNode->next;
+                }
+                // Clear the cart
+                while (cartList->head) {
+                    funcProductNode* temp = cartList->head;
+                    cartList->head = cartList->head->next;
+                    delete temp;
+                }
+                cartList->tail = nullptr;
+                cartList->size = 0;
+
+                system("cls");
+                cout << YELLOW << "All items removed from cart. Returning to previous menu..." << RESET << endl;
+                system("pause");
+                system("cls");
+                return;
+            }
+            case 5:system("cls");checkout(cartList); saveAllProductsToCSV(list, "../Database/products.csv"); return;
             default:cout << RED << "Invalid option! Please try again." << RESET << endl;system("cls");break;
         }
     }

@@ -59,16 +59,16 @@ void posBalance(){
         switch(choice) {
             case 1: {
                 system("cls");
-                ifstream transaction;
-                transaction.open("../Database/transactions.csv");
-                if(!transaction.is_open()) cout << RED << "File not Found!!" << RESET << endl;
+                ifstream transaction("../Database/transactions.csv");
+                if(!transaction.is_open()) {
+                    cout << RED << "File not Found!!" << RESET << endl;
+                    break;
+                }
                 string line;
                 cout << YELLOW << "Transaction History" << RESET << endl;
                 cout << string(50, '-') << endl;
+                getline(transaction, line); // Skip header line
                 while (getline(transaction, line)) {
-                    if (line.empty()) continue; 
-                    if (line[0] == '"') line = line.substr(1, line.size() - 2); // Remove quotes if present
-                    getline(transaction, line); // Skip header line
                     stringstream ss(line);
                     string datetime, total, products;
                     getline(ss, datetime, ',');
@@ -128,7 +128,7 @@ void posBalance(){
             }
             case 3:{
                 system("cls");
-                ifstream balanceFile("Database/total_money.txt");
+                ifstream balanceFile("../Database/total_money.txt");
                 if (!balanceFile.is_open()) {
                     cout << RED << "Balance file not found!" << RESET << endl;
                     return;
