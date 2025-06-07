@@ -114,9 +114,8 @@ int verifyRoleInSignIn(signinStack *s, string email, string password){
     }
 
     if (role == "customer") return 1;
-    else if (role == "cashier") return 2;
-    else if (role == "manager") return 3;
-    else if (role == "admin") return 4;
+    else if (role == "manager") return 2;
+    else if (role == "admin") return 3;
     else return 0;
 }
 

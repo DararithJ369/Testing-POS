@@ -10,7 +10,6 @@ using namespace std;
 
 enum ROLE{
     CUSTOMER = 1,
-    CASHIER,
     MANAGER,
     ADMIN
 };
@@ -18,18 +17,9 @@ enum ROLE{
 int main(){
     while(true){
         switch(login()){
-            case CUSTOMER:{
-                system("cls");
-                customerMenu();
-                break;}
-            // case CASHIER:cashierMenu();break;
-            // case MANAGER:managerMenu();break;
-            case ADMIN:{
-                system("cls");
-                adminMenu();
-                break;  
-            }
-
+            case CUSTOMER:system("cls"); customerMenu(); break;
+            case MANAGER:system("cls"); managerMenu();break;
+            case ADMIN:system("cls"); adminMenu(); break;  
         }       
     }
 }

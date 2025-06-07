@@ -11,53 +11,6 @@
 #include "product.h"
 using namespace std;
 
-void funcUserManagementMenu(funcListUser* userList) {
-    funcLoadUsers(userList, "Database/users.csv"); 
-    while (true) {
-        system("cls");
-        cout << BOLD << GRAY << string(50, '-') << RESET << endl;
-        cout << BOLD << YELLOW << "User Management" << RESET << endl;
-        cout << "   1. Add user\n   2. Delete user based on email\n   3. Update information\n   4. Search based on email\n   5. Display users\n   6. Back\n";
-        cout << BOLD << GRAY << string(50, '-') << RESET << endl;
-        cout << "Enter your choice: ";
-        int choice;
-        cin >> choice;
-        cin.ignore(); // Clear input buffer
-
-        string name, email, password, phone, role;
-        char gender;
-        int age;
-        switch (choice) {
-            case 1: {
-                addNewUsers(userList);
-                cout << GREEN << "New user has been added successfully!" << RESET << endl;
-                break;
-            }
-            case 2:{
-                funcDeleteUserByEmail(userList);
-                cout << GREEN << "User deleted successfully!" << RESET << endl;
-                break;
-            }
-            case 3: {
-                funcUpdateUserToCSV(userList);
-                cout << GREEN << "User updated successfully!" << RESET << endl;
-                break;
-            }
-            case 4: {
-                funcSearchUserByEmail(userList);
-                break;
-            }
-            case 5: {
-                funcDisplayUsers(userList, 1);
-                break;
-            }
-            case 6: {
-                return; // Back to main menu
-            }
-        }
-    }
-}
-
 void productInventory(funcListProduct* productList){ 
     while(true){
         displayAllProducts(productList, false);
@@ -97,7 +50,10 @@ void productInventory(funcListProduct* productList){
                 break;
             }
             case 6:{
-                cout << YELLOW << "\n\nReturning to the previous menu..." << RESET << endl;
+                system("cls");
+                cout << YELLOW << "Returning to the previous menu..." << RESET << endl;
+                system("pause");
+                system("cls");
                 return;
             }
             default:{
@@ -110,26 +66,188 @@ void productInventory(funcListProduct* productList){
     
 }
 
+void viewOwnInformation(funcListUser* userList, string loggedEmail){
+    while(true){
+        int choice;
+        system("cls");
+        displayOwnInfo(userList, loggedEmail);
+        cout << string(50, '-') << endl;
+        cout << "   1. Edit own information\n   2. back\n";
+        cout << string(50, '-') << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+        switch(choice){
+            case 1: {
+                system("cls");
+                adminModifyInformation(userList, loggedEmail);
+                break;
+            }
+            case 2: {
+                system("cls");
+                cout << YELLOW << "Returning to the previous menu..." << RESET << endl;
+                system("pause");
+                return;
+            }
+            default : {
+                cout << RED << "\nInvalid input! Please try again." << RESET << endl;
+                break; 
+            }
+        }
+    }
+}
+
+void viewUserInformation(funcListUser* userList){
+    while(true){
+        int choice;
+        funcUpdateUserToCSV(userList);
+        // system("pause");
+        break;
+    }
+}
+
+void information(funcListUser* userList, string loggedEmail){
+    while(true){
+        system("cls");
+        cout << BOLD << string(50, '-') << RESET << endl;
+        cout << BOLD << YELLOW << "User management" << RESET << endl;
+        cout << "   1. View own information\n   2. View/update user information\n   3. Back\n";
+        cout << BOLD << string(50, '-') << RESET << endl;
+        cout << "Enter your choice: ";
+        int choice;
+        cin >> choice; 
+        switch(choice){
+            case 1:{
+                system("cls");
+                viewOwnInformation(userList, loggedEmail);
+                break;
+            }
+            case 2:{
+                system("cls");
+                viewUserInformation(userList);
+                break;
+            }
+            case 3:{
+                system("cls");
+                cout << YELLOW << "Returning to the previous menu..." << RESET << endl;\
+                system("pause");
+                system("cls");
+                return;
+            }
+            default:{
+                cout << RED << "\nInvalid input! Please try again." << RESET << endl;
+                break;
+            }
+        }
+    }
+}
+
+void showSignedUpLog() {
+    system("cls");
+    ifstream log("Database/userlog.txt");
+    if (!log.is_open()) {
+        cout << RED << "No log file found." << RESET << endl;
+        system("pause");
+        return;
+    }
+    cout << BOLD << YELLOW << "User Log - Signed Up:" << RESET << endl;
+    cout << string(50, '-') << endl;
+    string line;
+    while (getline(log, line)) {
+        if (line.find("Signed up") != string::npos)
+            cout << line << endl;
+    }
+    cout << string(50, '-') << endl;
+    log.close();
+    system("pause");
+}
+
+void showSignedInLog() {
+    system("cls");
+    ifstream log("Database/userlog.txt");
+    if (!log.is_open()) {
+        cout << RED << "No log file found." << RESET << endl;
+        system("pause");
+        return;
+    }
+    cout << BOLD << YELLOW << "User Log - Signed In:" << RESET << endl;
+    cout << string(50, '-') << endl;
+    string line;
+    while (getline(log, line)) {
+        if (line.find("Logged in") != string::npos)
+            cout << line << endl;
+    }
+    cout << string(50, '-') << endl;
+    log.close();
+    system("pause");
+}
+
+void showExitedLog() {
+    system("cls");
+    ifstream log("Database/userlog.txt");
+    if (!log.is_open()) {
+        cout << RED << "No log file found." << RESET << endl;
+        system("pause");
+        return;
+    }
+    cout << BOLD << YELLOW << "User Log - Exited:" << RESET << endl;
+    cout << string(50, '-') << endl;
+    string line;
+    while (getline(log, line)) {
+        if (line.find("Exited") != string::npos)
+            cout << line << endl;
+    }
+    cout << string(50, '-') << endl;
+    log.close();
+    system("pause");
+}
+
+void showUserLog(){
+    int logChoice;
+    do {
+        system("cls");
+        cout << YELLOW << "Check Log In Menu" << RESET << endl;
+        cout << BOLD << string(50, '-') << RESET << endl;
+        cout << "  1. Show Signed Up Log\n";
+        cout << "  2. Show Signed In Log\n";
+        cout << "  3. Show Exited Log\n";
+        cout << "  4. Back\n";
+        cout << BOLD << string(50, '-') << RESET << endl;
+        cout << "Enter your choice: ";
+        cin >> logChoice;
+        cin.ignore();
+        switch (logChoice) {
+            case 1: showSignedUpLog(); break;
+            case 2: showSignedInLog(); break;
+            case 3: showExitedLog(); break;
+            case 4: system("cls"); cout << YELLOW << "Retuning to the previous menu..." << RESET << endl; system("pause"); break;
+            default: cout << RED << "Invalid option! Please try again." << RESET << endl; system("pause"); break;
+        }
+    } while (logChoice != 4);
+}
+
 void adminMenu() {
-    string user_email = catchEmailFromTemporaryEmail();
+    string loggedEmail = catchEmailFromTemporaryEmail();
     funcListUser* userList = createfuncListUser();
-    funcListProduct* productList = createfuncListProduct();
+    funcListProduct* productList = createfuncListProduct();    
+    funcLoadUsers(userList, "Database/users.csv");
     loadAllProductsFromCSV(productList, "Database/products.csv");
     while (true) {
         system("cls");
-        cout << BOLD << GRAY << string(50, '-') << RESET << endl;
+        cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Your current role: " << RED << "admin" << RESET << endl;
         cout << "   1. View inventory\n   2. View user information\n   3. Check log in\n   4. Back\n";
-        cout << BOLD << GRAY << string(50, '-') << RESET << endl;
+        cout << BOLD << string(50, '-') << RESET << endl;
         cout << "Enter your choice: ";
         int choice;
         cin >> choice;
         cin.ignore(); // Clear input buffer
 
         switch (choice) {
-            case 1: productInventory(productList); break;
-            // case 2: funcProductManagementMenu(productList); break; // Assuming this function is defined
-            case 3: return; // Back to main m=enu
+            case 1: system("cls"); productInventory(productList); break;
+            case 2: system("cls"); information(userList, loggedEmail); break;
+            case 3: system("cls"); showUserLog(); break;
+            case 4: return; // Back to main menu
             default: cout << RED << "Invalid option! Please try again." << RESET << endl; break;
         }
     }

@@ -190,8 +190,8 @@ void funcDisplayUsers(funcListUser* list, bool check) {
     system("cls");
     int n0 = 1;
     funcUserNode* current = list->head;
-    cout << VIOLET << "All users information in the system\n" << RESET;
-    cout << string(116, '-') << endl;
+    cout << YELLOW << "All users information in the system\n" << RESET;
+    cout << string(104, '-') << endl;
     cout << left 
          << setw(5)  << "No" 
          << setw(20) << "Name" 
@@ -202,7 +202,7 @@ void funcDisplayUsers(funcListUser* list, bool check) {
          << setw(30) << "Email"
          << setw(20) << "Password"
          << endl;
-    cout << string(116, '-') << endl;
+    cout << string(104, '-') << endl;
     while(current != NULL){
         cout << left
              << setw(5)  << n0
@@ -218,7 +218,7 @@ void funcDisplayUsers(funcListUser* list, bool check) {
         n0++; 
     }
     
-    cout << string(116, '-') << endl;
+    cout << string(104, '-') << endl;
     cout << YELLOW << "Total users: " << list->size << RESET << endl << endl;
     if(check){ system("pause"); system("cls");}
 }
@@ -389,16 +389,16 @@ string funcPhoneMod(string newPhone){
 string funcRoleMod(string newRole){
     while(true){
         cout << "Current role: " << newRole << endl;
-        cout << "Enter new role (admin, manager, cashier, customer): ";
+        cout << "Enter new role (admin, manager, customer): ";
         cin >> newRole;
         newRole = toLower(newRole);
         system("cls");
-        if(newRole == "admin" || newRole == "manager" || newRole == "cashier" || newRole == "customer") {
+        if(newRole == "admin" || newRole == "manager" || newRole == "customer") {
             cout << GREEN << "New role has been changed successfully\n" << RESET << endl;
             return newRole;
         }
         else {
-            cout << RED << "Invalid role! Please enter a valid role (admin, manager, cashier, customer).\n" << RESET << endl;
+            cout << RED << "Invalid role! Please enter a valid role (admin, manager, customer).\n" << RESET << endl;
             continue;
         }
     }
@@ -448,7 +448,7 @@ void funcUpdateUserToCSV(funcListUser* list){
     int option = 0;
     int select;
     funcDisplayUsers(list, 0);
-
+    
     cout << "Select the user you want to update (1-" << list->size << "): ";
     cin >> select;
     cin.ignore();
@@ -467,17 +467,17 @@ void funcUpdateUserToCSV(funcListUser* list){
     cout << GREEN << current->name << " | Update User Information\n" << RESET;
     cout << string(50, '-') << endl;
     cout << "Current Information:\n";
-    cout << "Name: " << current->name << endl;
-    cout << "Gender: " << current->gender << endl;
-    cout << "Age: " << current->age << endl;
-    cout << "Phone: " << current->phone << endl;
-    cout << "Role: " << current->role << endl;
-    cout << "Email: " << current->email << endl;
-    cout << "Password: " << current->password << endl;
+    cout << "Name       : " << current->name << endl;
+    cout << "Gender     : " << current->gender << endl;
+    cout << "Age        : " << current->age << endl;
+    cout << "Phone      : " << current->phone << endl;
+    cout << "Role       : " << current->role << endl;
+    cout << "Email      : " << current->email << endl;
+    cout << "Password   : " << current->password << endl;
     cout << string(50, '-') << endl << endl;
 
     do {
-        cout << VIOLET << "Update User Information Menu:\n" << RESET;
+        cout << YELLOW << "Update User Information Menu:\n" << RESET;
         cout << "1. Update Name\n";
         cout << "2. Update Gender\n";
         cout << "3. Update Age\n";
@@ -497,7 +497,7 @@ void funcUpdateUserToCSV(funcListUser* list){
             case 5: system("cls"); current->role = funcRoleMod(current->role); break;
             case 6: system("cls"); current->email = funcEmailMod(current->email); break;
             case 7: system("cls"); current->password = funcPasswordMod(current->password); break;
-            case 8: system("cls"); return; // exit update menu
+            case 8: {system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); system("cls"); return;} // exit update menu
             default: cout << RED << "Invalid option! Please try again.\n" << RESET; break;
         }
 
@@ -631,12 +631,12 @@ void funcModifyOwnInfo(funcListUser* list, string loggedEmail){
             cout << GREEN << current->name << " | Current User Information\n" << RESET;
             cout << string(50, '-') << endl;
             cout << "Current Information:\n";
-            cout << "Name: " << current->name << endl;
-            cout << "Gender: " << current->gender << endl;
-            cout << "Age: " << current->age << endl;
-            cout << "Phone: " << current->phone << endl;
-            cout << "Role: " << current->role << endl;
-            cout << "Email: " << current->email << endl;
+            cout << "Name       : " << current->name << endl;
+            cout << "Gender     : " << current->gender << endl;
+            cout << "Age        : " << current->age << endl;
+            cout << "Phone      : " << current->phone << endl;
+            cout << "Role       : " << current->role << endl;
+            cout << "Email      : " << current->email << endl;
             cout << string(50, '-') << endl << endl;
             // found = true;
             break;
@@ -645,7 +645,7 @@ void funcModifyOwnInfo(funcListUser* list, string loggedEmail){
     }
 
     do {
-        cout << VIOLET << "Update User Information Menu:\n" << RESET;
+        cout << YELLOW << "Update your information\n" << RESET;
         cout << "1. Update Name\n";
         cout << "2. Update Gender\n";
         cout << "3. Update Age\n";
@@ -684,20 +684,85 @@ void funcModifyOwnInfo(funcListUser* list, string loggedEmail){
     } while(option != 7);    
 }
 
-void displayOwnInfo(funcListUser* userList, string email) {
+void displayOwnInfo(funcListUser* userList, string loggedEmail) {
     funcUserNode* current = userList->head;
     while (current) {
-        if (current->email == email) {
-            cout << GREEN << "Your Information:\n" << RESET;
-            cout << "Name: " << current->name << endl;
-            cout << "Gender: " << current->gender << endl;
-            cout << "Age: " << current->age << endl;
-            cout << "Phone: " << current->phone << endl;
-            cout << "Role: " << current->role << endl;
-            cout << "Email: " << current->email << endl;
+        if (current->email == loggedEmail) {
+            cout << YELLOW << "Your Information:\n" << RESET;
+            cout << "Name       : " << current->name << endl;
+            cout << "Gender     : " << current->gender << endl;
+            cout << "Age        : " << current->age << endl;
+            cout << "Phone      : " << current->phone << endl;
+            cout << "Role       : " << current->role << endl;
+            cout << "Email      : " << current->email << endl;
             return;
         }
         current = current->next;
     }
-    cout << RED << "No user found with email: " << email << RESET << endl;
+    cout << RED << "No user found with email: " << loggedEmail << RESET << endl;
+}
+
+void adminModifyInformation(funcListUser* list, string loggedEmail){
+    funcUserNode* current = list->head;
+    int option = 0;
+    int select;
+    system("cls");
+    while(current != NULL){
+        if(current->email == loggedEmail){
+            cout << GREEN << current->name << " | Current User Information\n" << RESET;
+            cout << string(50, '-') << endl;
+            cout << "Current Information:\n";
+            cout << "Name       : " << current->name << endl;
+            cout << "Gender     : " << current->gender << endl;
+            cout << "Age        : " << current->age << endl;
+            cout << "Phone      : " << current->phone << endl;
+            cout << "Role       : " << current->role << endl;
+            cout << "Email      : " << current->email << endl;
+            cout << "Password   : " << current->password << endl;
+            cout << string(50, '-') << endl << endl;
+            // found = true;
+            break;
+        }
+        current = current->next;
+    }    
+    do {
+        cout << YELLOW << "Update your information:\n" << RESET;
+        cout << "1. Update Name\n";
+        cout << "2. Update Gender\n";
+        cout << "3. Update Age\n";
+        cout << "4. Update Phone\n";
+        cout << "5. Update Role\n";
+        cout << "6. Update Email\n";
+        cout << "7. Update Password\n";
+        cout << "8. Back to Main Menu\n";
+        cout << "Select an option: ";
+        cin >> option;
+
+        switch(option) {
+            case 1: system("cls"); current->name = funcNameMod(current->name); break;
+            case 2: system("cls"); current->gender = funcGenderMod(current->gender); break;
+            case 3: system("cls"); current->age = funcAgeMod(current->age); break;
+            case 4: system("cls"); current->phone = funcPhoneMod(current->phone); break;
+            case 5: system("cls"); current->role = funcRoleMod(current->role); break;
+            case 6: system("cls"); current->email = funcEmailMod(current->email); break;
+            case 7: system("cls"); current->password = funcPasswordMod(current->password); break;
+            case 8: system("cls"); cout << YELLOW << "Returning to the previous menu..." << RESET << endl; system("pause"); return; // exit update menu
+            default: cout << RED << "Invalid option! Please try again.\n" << RESET; break;
+        }
+
+        funcUpdateUserToList(list, select, current->name, current->age, current->gender, current->phone, current->role, current->email, current->password);
+
+        char choice = 'P';
+        while(choice != 'Y' && choice != 'N') {
+            cout << "Do you want modify something else? (Y/N): ";
+            cin >> choice;
+            choice = toupper(choice);
+            switch(choice){
+                case 'Y': system("cls"); cout << GREEN << "The information has been changed successfully\n" << RESET << endl; break;
+                case 'N': system("cls"); funcSaveUsers(list, "Database/users.csv"); return;
+                default: cout << RED << "Invalid choice! Please enter Y or N.\n" << RESET << endl;
+            }
+        }
+
+    } while(option != 8);
 }

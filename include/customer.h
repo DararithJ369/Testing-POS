@@ -135,15 +135,19 @@ void customerMenu(){
     while(true){
         cout << BOLD << GRAY << string(50, '-') << RESET << endl;
         cout << "Your current role: " << YELLOW << "customer" << RESET << endl;
-        cout << "   1. Select Product\n   2. Check your information\n   3. Any help from our system\n   4. Back" << endl;
+        cout << "   1. View own information\n   2. Select product\n   3. View help\n   4. Back" << endl;
         cout << BOLD << GRAY << string(50, '-') << RESET << endl;
         cout << "Enter your option: ", cin >> choice;
         switch(choice){
-            case 1: {system("cls"); selectAllProducts(list, cartList); break;}
+            case 1: {
+                system("cls"); 
+                funcModifyOwnInfo(userList, loggedEmail);
+                break;
+            }
             case 2: {
                 // char ch;
                 system("cls"); 
-                funcModifyOwnInfo(userList, loggedEmail);
+                selectAllProducts(list, cartList); 
                 break;
             }
             case 3: {
